@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { UsuarioContext } from "../context/UsuarioContext";
+import FAQSection from "./Components/FAQSection";
+import { AboutScreen } from "./AboutScreen";
+import ReactProjectsSlider from "./Components/ReactPRojectSlider";
 
 export const AndreaHome = () => {
   const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
 
-  // Aquí van las URLs de las imágenes de Andrea
   const obras = [
     {
       id: 1,
@@ -71,319 +74,212 @@ export const AndreaHome = () => {
   ];
 
   return (
-    <div className="andrea-container">
-      {/* HERO - Suave como ella */}
-      <section className="hero-andrea">
-        <div className="container">
-          <div className="row justify-content-center text-center">
-            <div className="col-lg-8">
-              <h1 className="andrea-titulo">
-                Andrea
-                <span className="andrea-apellido"> [Apellido]</span>
-              </h1>
-              <div className="andrea-subtitulo">
-                <span className="separador">✦</span>
-                Mandalas · Geometría Sagrada · Murales
-                <span className="separador">✦</span>
-              </div>
-              <p className="andrea-descripcion">
-                Color, simetría y vibración. Arte que nace del centro.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* GALERÍA PRINCIPAL - Imágenes redondeadas */}
-      <section className="galeria-andrea">
+    <div>
+      {/* HERO - Andrea */}
+      <section className="hero-section text-center">
         <div className="container">
           <div className="row">
-            {obras.map((obra) => (
-              <div key={obra.id} className="col-md-6 col-lg-4 mb-5">
-                <div className="obra-card">
-                  <div className="obra-imagen-wrapper">
-                    <img
-                      src={obra.imagen}
-                      alt={obra.descripcion}
-                      className="obra-imagen"
-                      onClick={() => setImagenSeleccionada(obra)}
+            <div className="col-md-12">
+              <img
+                className="img-codes"
+                src="../img/Codes/Codes.png"
+                alt="codes"
+              />
+              
+              <div className="mb-3 text-uppercase fw-bold" style={{ letterSpacing: '3px', color: '#0d6efd', fontSize: '0.85rem' }}>
+                ARTE · MANDALAS · GEOMETRÍA SAGRADA
+              </div>
+              
+              <h1 className="display-4 font-weight-bold mt-3">
+                Andrea <span className="text-primary">[Apellido]</span>
+              </h1>
+              
+              <p className="lead mt-4 mb-4"
+                style={{
+                  color: '#c9bebe',
+                  fontSize: '1.3rem',
+                  maxWidth: '800px',
+                  margin: '0 auto',
+                  fontWeight: '500'
+                }}>
+                <strong>Mandalas, geometría sagrada y murales</strong> que transforman espacios y conectan con el centro.
+              </p>
+              
+              {/* Badges */}
+              <div className="d-flex justify-content-center flex-wrap gap-3 mb-5">
+                <span className="badge bg-dark text-white px-4 py-2">+10 años</span>
+                <span className="badge bg-dark text-white px-4 py-2">Murales en vivo</span>
+                <span className="badge bg-dark text-white px-4 py-2">Arte original</span>
+              </div>
+
+              <a
+                href="#galeria"
+                className="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-sm hover-scale"
+                style={{ fontSize: '1.2rem' }}
+              >
+                Ver obra →
+              </a>
+              
+              <p className="mt-4 text-muted small" style={{ maxWidth: '600px', margin: '20px auto 0' }}>
+                Cada pieza es original, pintada a mano.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="background-image-container">
+        
+        {/* SECCIÓN - Obra destacada */}
+        <section className="marketing-section py-5">
+          <div className="container">
+            <div className="row justify-content-md-center">
+              <div className="col-md-10 col-lg-8 text-center">
+                <h2 className="display-5 font-weight-bold mb-4" style={{ color: '#ffffff' }}>
+                  Obra <span className="text-primary">reciente</span>
+                </h2>
+                <p className="lead" style={{ color: 'rgba(255,255,255,0.9)', fontSize: '1.2rem' }}>
+                  Mandalas, estudios de geometría sagrada y murales de gran formato.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* GALERÍA - Grid de obras */}
+        <section className="py-5">
+          <div className="container">
+            <div className="row">
+              {obras.map((obra) => (
+                <div key={obra.id} className="col-md-6 col-lg-4 mb-4">
+                  <div 
+                    className="card h-100 border-0 shadow-sm hover-card"
+                    style={{ background: '#151515', cursor: 'pointer' }}
+                    onClick={() => setImagenSeleccionada(obra)}
+                  >
+                    <img 
+                      src={obra.imagen} 
+                      className="card-img-top" 
+                      alt={obra.titulo}
+                      style={{ aspectRatio: '1/1', objectFit: 'cover' }}
                     />
-                  </div>
-                  <div className="obra-info">
-                    <h3 className="obra-titulo">{obra.titulo}</h3>
-                    <p className="obra-categoria">{obra.categoria}</p>
-                    <p className="obra-descripcion">{obra.descripcion}</p>
+                    <div className="card-body">
+                      <h5 className="card-title text-white">{obra.titulo}</h5>
+                      <p className="card-text text-white-50">{obra.categoria}</p>
+                      <p className="card-text text-white-50 small">{obra.descripcion}</p>
+                    </div>
                   </div>
                 </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* SECCIÓN - Sobre su arte (como la sección de criterios) */}
+        <div className="container mt-5 pt-4">
+          <div className="row">
+            <div className="col-12 text-center mb-4">
+              <h2 className="h3 font-weight-bold" style={{ color: '#212529' }}>Geometría que respira</h2>
+              <p style={{ color: '#6c757d' }}>Arte que nace del centro</p>
+            </div>
+            
+            <div className="col-md-8 mx-auto mb-4">
+              <div className="card border-0 shadow-sm p-4 text-center" style={{ background: '#f8f9fa' }}>
+                <p className="lead" style={{ fontSize: '1.2rem', color: '#495057', fontStyle: 'italic' }}>
+                  "Cada mandala es un viaje al centro. Cada mural, un diálogo con el espacio. 
+                  La geometría sagrada no es solo forma: es la estructura invisible de lo que sentimos."
+                </p>
+                <p className="mt-3 fw-bold" style={{ color: '#0d6efd' }}>— Andrea</p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SECCIÓN "SOBRE SU ARTE" */}
-      <section className="sobre-andrea">
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-lg-8 text-center">
-              <h2 className="seccion-titulo">
-                Geometría que respira
-              </h2>
-              <p className="seccion-texto">
-                Cada mandala es un viaje al centro. Cada mural, un diálogo con el espacio.
-                La geometría sagrada no es solo forma: es la estructura invisible de lo que sentimos.
-              </p>
-              <p className="seccion-firma">
-                — Andrea
-              </p>
             </div>
           </div>
         </div>
-      </section>
 
-      {/* MODAL PARA VER IMAGEN GRANDE (si hace clic) */}
-      {imagenSeleccionada && (
-        <div className="modal-overlay" onClick={() => setImagenSeleccionada(null)}>
-          <div className="modal-contenido" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-cerrar" onClick={() => setImagenSeleccionada(null)}>×</button>
-            <img
-              src={imagenSeleccionada.imagen}
-              alt={imagenSeleccionada.descripcion}
-              className="modal-imagen"
-            />
-            <div className="modal-info">
-              <h4>{imagenSeleccionada.titulo}</h4>
-              <p>{imagenSeleccionada.descripcion}</p>
+        {/* MODAL - Para ver imagen grande */}
+        {imagenSeleccionada && (
+          <div 
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0,0,0,0.9)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 1000,
+              padding: '20px'
+            }}
+            onClick={() => setImagenSeleccionada(null)}
+          >
+            <div 
+              style={{
+                position: 'relative',
+                maxWidth: '90vw',
+                maxHeight: '90vh',
+                backgroundColor: 'white',
+                borderRadius: '20px',
+                padding: '20px'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button 
+                style={{
+                  position: 'absolute',
+                  top: '-15px',
+                  right: '-15px',
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  backgroundColor: '#dc3545',
+                  color: 'white',
+                  border: 'none',
+                  fontSize: '24px',
+                  cursor: 'pointer'
+                }}
+                onClick={() => setImagenSeleccionada(null)}
+              >
+                ×
+              </button>
+              <img 
+                src={imagenSeleccionada.imagen} 
+                alt={imagenSeleccionada.titulo}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '70vh',
+                  objectFit: 'contain'
+                }}
+              />
+              <div style={{ textAlign: 'center', padding: '20px 0 10px' }}>
+                <h4 style={{ color: '#0d6efd' }}>{imagenSeleccionada.titulo}</h4>
+                <p style={{ color: '#6c757d' }}>{imagenSeleccionada.descripcion}</p>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* ESTILOS */}
-      <style jsx>{`
-        .andrea-container {
-          background-color: #faf7f2;
-          font-family: 'Cormorant Garamond', 'Georgia', serif;
-          min-height: 100vh;
-        }
-
-        /* HERO */
-        .hero-andrea {
-          padding: 80px 0 40px;
-          background: linear-gradient(180deg, #ffffff 0%, #faf7f2 100%);
-        }
-
-        .andrea-titulo {
-          font-size: 4rem;
-          font-weight: 300;
-          color: #4a4a4a;
-          margin-bottom: 0.5rem;
-          letter-spacing: 2px;
-        }
-
-        .andrea-apellido {
-          font-weight: 500;
-          color: #b75c4b;
-        }
-
-        .andrea-subtitulo {
-          font-size: 1.2rem;
-          color: #8a7a6c;
-          margin: 20px 0;
-          font-family: 'Montserrat', sans-serif;
-          font-weight: 300;
-          letter-spacing: 3px;
-        }
-
-        .separador {
-          color: #d4a59a;
-          margin: 0 15px;
-          font-size: 1rem;
-        }
-
-        .andrea-descripcion {
-          font-size: 1.3rem;
-          color: #6b5b4e;
-          max-width: 600px;
-          margin: 0 auto;
-          font-style: italic;
-        }
-
-        /* GALERÍA */
-        .galeria-andrea {
-          padding: 60px 0;
-        }
-
-        .obra-card {
-          transition: transform 0.3s ease;
-          cursor: pointer;
-        }
-
-        .obra-card:hover {
-          transform: translateY(-5px);
-        }
-
-        .obra-imagen-wrapper {
-          border-radius: 30px;
-          overflow: hidden;
-          aspect-ratio: 1/1;
-          box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-          border: 1px solid rgba(255,255,255,0.5);
-        }
-
-        .obra-imagen {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.5s ease;
-        }
-
-        .obra-card:hover .obra-imagen {
-          transform: scale(1.05);
-        }
-
-        .obra-info {
-          padding: 20px 10px 0;
-          text-align: center;
-        }
-
-        .obra-titulo {
-          font-size: 1.3rem;
-          color: #b75c4b;
-          margin-bottom: 5px;
-          font-weight: 400;
-        }
-
-        .obra-categoria {
-          font-size: 0.9rem;
-          color: #8a7a6c;
-          margin-bottom: 8px;
-          font-family: 'Montserrat', sans-serif;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-        }
-
-        .obra-descripcion {
-          font-size: 1rem;
-          color: #6b5b4e;
-          font-style: italic;
-        }
-
-        /* SECCIÓN SOBRE */
-        .sobre-andrea {
-          padding: 80px 0;
-          background-color: #ffffff;
-          border-top: 1px solid #e8ddd2;
-          border-bottom: 1px solid #e8ddd2;
-        }
-
-        .seccion-titulo {
-          font-size: 2.5rem;
-          color: #4a4a4a;
-          margin-bottom: 30px;
-          font-weight: 300;
-          letter-spacing: 2px;
-        }
-
-        .seccion-texto {
-          font-size: 1.3rem;
-          color: #6b5b4e;
-          line-height: 1.8;
-          max-width: 700px;
-          margin: 0 auto 30px;
-          font-style: italic;
-        }
-
-        .seccion-firma {
-          font-size: 1.5rem;
-          color: #b75c4b;
-          font-family: 'Cormorant Garamond', serif;
-        }
-
-        /* MODAL */
-        .modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-color: rgba(0,0,0,0.9);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          z-index: 1000;
-          padding: 20px;
-        }
-
-        .modal-contenido {
-          position: relative;
-          max-width: 90vw;
-          max-height: 90vh;
-          background-color: white;
-          border-radius: 20px;
-          padding: 20px;
-          box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
-        .modal-cerrar {
-          position: absolute;
-          top: -15px;
-          right: -15px;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background-color: #b75c4b;
-          color: white;
-          border: none;
-          font-size: 24px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-          z-index: 1001;
-        }
-
-        .modal-imagen {
-          max-width: 100%;
-          max-height: 70vh;
-          object-fit: contain;
-          border-radius: 15px;
-        }
-
-        .modal-info {
-          text-align: center;
-          padding: 20px 0 10px;
-        }
-
-        .modal-info h4 {
-          color: #b75c4b;
-          margin-bottom: 5px;
-          font-size: 1.5rem;
-        }
-
-        .modal-info p {
-          color: #6b5b4e;
-          font-style: italic;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-          .andrea-titulo {
-            font-size: 2.5rem;
+        {/* ESTILOS - Los mismos de HomeScreen */}
+        <style jsx>{`
+          .hover-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
           }
-          .andrea-subtitulo {
-            font-size: 1rem;
-            letter-spacing: 2px;
+          .hover-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 1rem 2rem rgba(0,0,0,0.3) !important;
           }
-          .separador {
-            margin: 0 5px;
+          .hover-scale {
+            transition: transform 0.3s ease;
           }
-          .obra-imagen-wrapper {
-            border-radius: 20px;
+          .hover-scale:hover {
+            transform: scale(1.05);
           }
-        }
-      `}</style>
+          .badge {
+            font-size: 0.9rem;
+            font-weight: 500;
+          }
+        `}</style>
+      </div>
     </div>
   );
 };
