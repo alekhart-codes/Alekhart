@@ -14,7 +14,7 @@ export const HomeScreen = () => {
       id: 1,
       titulo: "Flor de la Vida",
       categoria: "Mandalas",
-      imagen: "./img/Andrea/mandala1.jpg",
+      imagen: "../img/Andrea/mandala1.jpg",
       descripcion: "El origen de toda forma",
       tecnica: "Acrílico sobre papel",
       year: "2024"
@@ -23,7 +23,7 @@ export const HomeScreen = () => {
       id: 2,
       titulo: "Metatrón",
       categoria: "Mandalas",
-      imagen: "./img/Andrea/mandala2.jpg",
+      imagen: "../img/Andrea/mandala2.jpg",
       descripcion: "La geometría del equilibrio",
       tecnica: "Acrílico sobre papel",
       year: "2024"
@@ -32,7 +32,7 @@ export const HomeScreen = () => {
       id: 3,
       titulo: "Semilla de la Vida",
       categoria: "Mandalas",
-      imagen: "./img/Andrea/mandala3.jpg",
+      imagen: "../img/Andrea/mandala3.jpg",
       descripcion: "Los siete círculos de la creación",
       tecnica: "Acrílico sobre papel",
       year: "2023"
@@ -41,7 +41,7 @@ export const HomeScreen = () => {
       id: 4,
       titulo: "Estudio I",
       categoria: "Geometría Sagrada",
-      imagen: "./img/Andrea/geo1.jpg",
+      imagen: "../img/Andrea/geo1.jpg",
       descripcion: "Flor de la vida - estudio",
       tecnica: "Tinta sobre papel",
       year: "2024"
@@ -50,7 +50,7 @@ export const HomeScreen = () => {
       id: 5,
       titulo: "Estudio II",
       categoria: "Geometría Sagrada",
-      imagen: "./img/Andrea/geo2.jpg",
+      imagen: "../img/Andrea/geo2.jpg",
       descripcion: "Metatrón - variación",
       tecnica: "Tinta sobre papel",
       year: "2024"
@@ -59,7 +59,7 @@ export const HomeScreen = () => {
       id: 6,
       titulo: "Mural Vertical",
       categoria: "Murales",
-      imagen: "./img/Andrea/mural1.jpg",
+      imagen: "../img/Andrea/mural1.jpg",
       descripcion: "Geometría en altura",
       tecnica: "Acrílico sobre muro",
       year: "2024"
@@ -68,7 +68,7 @@ export const HomeScreen = () => {
       id: 7,
       titulo: "Muro Circular",
       categoria: "Murales",
-      imagen: "./img/Andrea/mural2.jpg",
+      imagen: "../img/Andrea/mural2.jpg",
       descripcion: "Mandala a gran escala",
       tecnica: "Acrílico sobre muro",
       year: "2023"
@@ -77,7 +77,7 @@ export const HomeScreen = () => {
       id: 8,
       titulo: "Intervención",
       categoria: "Murales",
-      imagen: "./img/Andrea/mural3.jpg",
+      imagen: "../img/Andrea/mural3.jpg",
       descripcion: "Espacio corporativo",
       tecnica: "Acrílico sobre muro",
       year: "2024"
@@ -86,7 +86,7 @@ export const HomeScreen = () => {
       id: 9,
       titulo: "Estudio III",
       categoria: "Geometría Sagrada",
-      imagen: "./img/Andrea/geo3.jpg",
+      imagen: "../img/Andrea/geo3.jpg",
       descripcion: "Sacro y simétrico",
       tecnica: "Tinta sobre papel",
       year: "2023"
@@ -190,7 +190,7 @@ export const HomeScreen = () => {
           <div className="row align-items-center">
             <div className="col-lg-5">
               <div className="sobre-imagen">
-                <img src="./img/Andrea/retrato.jpg" alt="Andrea Fortoul" />
+                <img src="../img/Andrea/retrato.jpg" alt="Andrea Fortoul" />
                 <div className="sobre-mandala">✦</div>
               </div>
             </div>
