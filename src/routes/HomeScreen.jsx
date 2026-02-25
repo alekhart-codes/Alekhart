@@ -190,7 +190,7 @@ export const HomeScreen = () => {
           <div className="row align-items-center">
             <div className="col-lg-5">
               <div className="sobre-imagen">
-                <img src="/img/andrea/retrato.jpg" alt="Andrea Fortoul" />
+                <img src="/img/Andrea/retrato.jpg" alt="Andrea Fortoul" />
                 <div className="sobre-mandala">✦</div>
               </div>
             </div>
