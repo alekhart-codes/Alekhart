@@ -19,27 +19,38 @@ const ReactProjectsSlider = () => {
       >
         
         <SwiperSlide>
-          <div className="w-full h-screen bg-cover bg-center flex items-center justify-center text-white" style={{ backgroundImage: `url('/img/proyecto1.jpg')` }}>
-          <h2 className="text-3xl font-bold">Creatividad + Tecnología</h2>
-          <p className="text-lg">Transformamos ideas en experiencias digitales con React.js</p>          </div>
+          <div className="w-full h-screen bg-cover bg-center flex items-center justify-center text-white" style={{ backgroundImage: `url('/img/andrea/mandala1.jpg')` }}>
+            <h2 className="text-5xl font-bold text-white" style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: '2px 2px 10px rgba(0,0,0,0.5)' }}>Mandalas</h2>
+          </div>
         </SwiperSlide> 
 
-        {/* 🖼️ Otras Slides con Imágenes */}
         <SwiperSlide>
-          <div className="w-full h-screen bg-cover bg-center flex items-center justify-center text-white" style={{ backgroundImage: `url('/img/proyecto1.jpg')` }}>
-            <h2 className="text-3xl font-bold bg-black bg-opacity-50 p-4 rounded-lg">Arquitectura Moderna con React.js</h2>
+          <div className="w-full h-screen bg-cover bg-center flex items-center justify-center text-white" style={{ backgroundImage: `url('/img/andrea/mandala2.jpg')` }}>
+            <h2 className="text-5xl font-bold text-white" style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: '2px 2px 10px rgba(0,0,0,0.5)' }}>Geometría Sagrada</h2>
           </div>
         </SwiperSlide>
 
         <SwiperSlide>
-          <div className="w-full h-screen bg-cover bg-center flex items-center justify-center text-white" style={{ backgroundImage: `url('/img/proyecto2.jpg')` }}>
-            <h2 className="text-3xl font-bold bg-black bg-opacity-50 p-4 rounded-lg">Interfaces personalizadas con Tailwind CSS</h2>
+          <div className="w-full h-screen bg-cover bg-center flex items-center justify-center text-white" style={{ backgroundImage: `url('/img/andrea/mandala3.jpg')` }}>
+            <h2 className="text-5xl font-bold text-white" style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: '2px 2px 10px rgba(0,0,0,0.5)' }}>Murales</h2>
           </div>
         </SwiperSlide>
 
         <SwiperSlide>
-          <div className="w-full h-screen bg-cover bg-center flex items-center justify-center text-white" style={{ backgroundImage: `url('/img/proyecto3.jpg')` }}>
-            <h2 className="text-3xl font-bold bg-black bg-opacity-50 p-4 rounded-lg">Interactividad optimizada con React Hooks</h2>
+          <div className="w-full h-screen bg-cover bg-center flex items-center justify-center text-white" style={{ backgroundImage: `url('/img/andrea/geo1.jpg')` }}>
+            <h2 className="text-5xl font-bold text-white" style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: '2px 2px 10px rgba(0,0,0,0.5)' }}>Flor de la Vida</h2>
+          </div>
+        </SwiperSlide>
+
+        <SwiperSlide>
+          <div className="w-full h-screen bg-cover bg-center flex items-center justify-center text-white" style={{ backgroundImage: `url('/img/andrea/geo2.jpg')` }}>
+            <h2 className="text-5xl font-bold text-white" style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: '2px 2px 10px rgba(0,0,0,0.5)' }}>Metatrón</h2>
+          </div>
+        </SwiperSlide>
+
+        <SwiperSlide>
+          <div className="w-full h-screen bg-cover bg-center flex items-center justify-center text-white" style={{ backgroundImage: `url('/img/andrea/mural1.jpg')` }}>
+            <h2 className="text-5xl font-bold text-white" style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: '2px 2px 10px rgba(0,0,0,0.5)' }}>Arte en Espacios</h2>
           </div>
         </SwiperSlide>
       </Swiper>
