@@ -25,47 +25,43 @@ export const NavBar = () => {
         <>
             <style>{`
                 .navbar-brand {
-                    max-width: 320px;
+                    max-width: 400px;
                     padding: 0;
                     margin-right: auto;
                 }
 
                 .navbar-brand-logo {
-                    max-height: 130px;
+                    max-height: 140px;
                     width: auto;
                     height: auto;
                     transition: max-height 0.3s ease;
                 }
 
                 .scrolled .navbar-brand-logo {
-                    max-height: 110px;
+                    max-height: 120px;
                 }
 
                 @media (max-width: 991px) {
                     .navbar-brand {
-                        max-width: 280px;
+                        max-width: 100%;
                     }
                     
                     .navbar-brand-logo {
-                        max-height: 110px;
+                        max-height: 210px; /* 50% más grande que antes (140px → 210px) */
                     }
 
                     .scrolled .navbar-brand-logo {
-                        max-height: 95px;
+                        max-height: 180px;
                     }
                 }
 
                 @media (max-width: 576px) {
-                    .navbar-brand {
-                        max-width: 240px;
-                    }
-                    
                     .navbar-brand-logo {
-                        max-height: 95px;
+                        max-height: 190px; /* Ajuste para móviles pequeños */
                     }
 
                     .scrolled .navbar-brand-logo {
-                        max-height: 80px;
+                        max-height: 160px;
                     }
                 }
 
@@ -77,8 +73,8 @@ export const NavBar = () => {
                 }
 
                 .navbar-toggler-icon {
-                    width: 2em;
-                    height: 2em;
+                    width: 2.2em;
+                    height: 2.2em;
                 }
 
                 .navbar-toggler:focus {
@@ -103,7 +99,7 @@ export const NavBar = () => {
                     }
 
                     .nav-link {
-                        font-size: 1.3rem;
+                        font-size: 1.4rem;
                         padding: 0.8rem 0;
                     }
                 }
