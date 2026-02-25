@@ -5,6 +5,8 @@ import { AboutScreen } from "./AboutScreen";
 import ReactProjectsSlider from "./Components/ReactPRojectSlider";
 
 export const HomeScreen = () => {
+  const { usuario } = React.useContext(UsuarioContext);
+  const [formEnviado, setFormEnviado] = useState(false);
   const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
 
   const obras = [
@@ -105,7 +107,6 @@ export const HomeScreen = () => {
                 <strong>Mandalas, geometría sagrada y murales</strong> que transforman espacios y conectan con el centro.
               </p>
               
-              {/* Badges */}
               <div className="d-flex justify-content-center flex-wrap gap-3 mb-5">
                 <span className="badge bg-dark text-white px-4 py-2">+10 años</span>
                 <span className="badge bg-dark text-white px-4 py-2">Murales en vivo</span>
@@ -130,7 +131,7 @@ export const HomeScreen = () => {
 
       <div className="background-image-container">
         
-        {/* SECCIÓN - Obra destacada */}
+        {/* SECCIÓN - Obra destacada (reemplaza marketing-section) */}
         <section className="marketing-section py-5">
           <div className="container">
             <div className="row justify-content-md-center">
@@ -146,7 +147,7 @@ export const HomeScreen = () => {
           </div>
         </section>
 
-        {/* GALERÍA - Grid de obras */}
+        {/* GALERÍA - Grid de obras (reemplaza la sección de proyectos) */}
         <section className="py-5">
           <div className="container">
             <div className="row">
@@ -175,7 +176,7 @@ export const HomeScreen = () => {
           </div>
         </section>
 
-        {/* SECCIÓN - Sobre su arte (como la sección de criterios) */}
+        {/* SECCIÓN - Sobre su arte (reemplaza la sección de criterios) */}
         <div className="container mt-5 pt-4">
           <div className="row">
             <div className="col-12 text-center mb-4">
@@ -195,7 +196,7 @@ export const HomeScreen = () => {
           </div>
         </div>
 
-        {/* MODAL - Para ver imagen grande */}
+        {/* MODAL - Para ver imagen grande (igual que antes) */}
         {imagenSeleccionada && (
           <div 
             style={{
@@ -259,7 +260,7 @@ export const HomeScreen = () => {
           </div>
         )}
 
-        {/* ESTILOS - Los mismos de HomeScreen */}
+        {/* ESTILOS - Idénticos al original */}
         <style jsx>{`
           .hover-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
