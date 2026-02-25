@@ -101,7 +101,7 @@ export const HomeScreen = () => {
 
   return (
     <div className="andrea-site">
-      {/* HERO - Poético y visual */}
+      {/* HERO - Andrea Fortoul (sin logo de Codes) */}
       <section className="andrea-hero">
         <div className="hero-fondo"></div>
         <div className="container">
@@ -110,7 +110,7 @@ export const HomeScreen = () => {
               <div className="mandala-pequena">✸</div>
               <h1 className="andrea-titulo">
                 Andrea
-                <span className="andrea-apellido"> [Apellido]</span>
+                <span className="andrea-apellido"> Fortoul</span>
               </h1>
               <div className="andrea-linea"></div>
               <p className="andrea-subtitulo">
@@ -132,7 +132,7 @@ export const HomeScreen = () => {
         </div>
       </section>
 
-      {/* FILTROS - Como un mandala horizontal */}
+      {/* FILTROS */}
       <section className="andrea-filtros">
         <div className="container">
           <div className="row">
@@ -153,7 +153,7 @@ export const HomeScreen = () => {
         </div>
       </section>
 
-      {/* GALERÍA - Orgánica, que respira */}
+      {/* GALERÍA */}
       <section id="galeria" className="andrea-galeria">
         <div className="container-fluid px-4">
           <div className="row g-4">
@@ -184,13 +184,13 @@ export const HomeScreen = () => {
         </div>
       </section>
 
-      {/* SOBRE ELLA */}
+      {/* SOBRE ANDREA */}
       <section className="andrea-sobre">
         <div className="container">
           <div className="row align-items-center">
             <div className="col-lg-5">
               <div className="sobre-imagen">
-                <img src="/img/andrea/retrato.jpg" alt="Andrea" />
+                <img src="/img/andrea/retrato.jpg" alt="Andrea Fortoul" />
                 <div className="sobre-mandala">✦</div>
               </div>
             </div>
@@ -206,7 +206,7 @@ export const HomeScreen = () => {
               <p className="sobre-texto">
                 Trabajo con espacios que necesitan alma. Con personas que buscan algo más que decoración.
               </p>
-              <div className="sobre-firma">Andrea</div>
+              <div className="sobre-firma">Andrea Fortoul</div>
             </div>
           </div>
         </div>
@@ -295,7 +295,7 @@ export const HomeScreen = () => {
         </div>
       )}
 
-      {/* ESTILOS PROPIOS DE ANDREA */}
+      {/* ESTILOS */}
       <style jsx>{`
         .andrea-site {
           font-family: 'Cormorant Garamond', 'Georgia', serif;
@@ -336,59 +336,66 @@ export const HomeScreen = () => {
         }
         
         .andrea-titulo {
-          font-size: 5rem;
+          font-size: clamp(2.8rem, 8vw, 5rem);
           font-weight: 300;
           color: #3a2a24;
           margin-bottom: 0.5rem;
+          line-height: 1.1;
         }
         
         .andrea-apellido {
           font-weight: 500;
           color: #c17b5e;
+          display: block;
+          font-size: clamp(2.2rem, 7vw, 4rem);
         }
         
         .andrea-linea {
-          width: 100px;
+          width: 80px;
           height: 1px;
           background: #c17b5e;
-          margin: 1.5rem auto;
+          margin: 1.2rem auto;
           opacity: 0.5;
         }
         
         .andrea-subtitulo {
-          font-size: 1.3rem;
-          letter-spacing: 4px;
+          font-size: clamp(1rem, 3.5vw, 1.3rem);
+          letter-spacing: 3px;
           color: #8b6b5c;
-          margin-bottom: 1.5rem;
+          margin-bottom: 1.2rem;
           text-transform: uppercase;
         }
         
         .andrea-frase {
-          font-size: 1.8rem;
+          font-size: clamp(1.3rem, 5vw, 1.8rem);
           font-style: italic;
           color: #5d4a40;
-          margin-bottom: 2rem;
+          margin-bottom: 1.8rem;
+          padding: 0 15px;
         }
         
         .andrea-badges {
           display: flex;
           justify-content: center;
-          gap: 1rem;
-          margin-bottom: 2.5rem;
+          gap: 0.8rem;
+          margin-bottom: 2rem;
+          flex-wrap: wrap;
         }
         
         .andrea-badges span {
-          padding: 0.3rem 1.2rem;
+          padding: 0.4rem 1.2rem;
           border: 1px solid #d4b2a0;
           border-radius: 40px;
           color: #5d4a40;
-          font-size: 0.9rem;
+          font-size: 0.85rem;
           letter-spacing: 1px;
+          background: rgba(255,255,255,0.3);
+          backdrop-filter: blur(5px);
         }
         
         .andrea-boton {
           display: inline-block;
-          padding: 1rem 3rem;
+          padding: 1rem 2.5rem;
           background: #c17b5e;
           color: white;
           text-decoration: none;
@@ -397,6 +404,9 @@ export const HomeScreen = () => {
           letter-spacing: 2px;
           transition: all 0.3s ease;
           border: none;
+          width: 100%;
+          max-width: 280px;
+          margin: 0 auto;
         }
         
         .andrea-boton:hover {
@@ -407,22 +417,22 @@ export const HomeScreen = () => {
         
         /* FILTROS */
         .andrea-filtros {
-          padding: 3rem 0;
+          padding: 2rem 0;
           background: white;
         }
         
         .filtros-wrapper {
           display: flex;
           justify-content: center;
-          gap: 1rem;
+          gap: 0.5rem;
           flex-wrap: wrap;
         }
         
         .filtro-btn {
           background: none;
           border: none;
-          padding: 0.5rem 2rem;
-          font-size: 1rem;
+          padding: 0.5rem 1.2rem;
+          font-size: 0.9rem;
           color: #8b6b5c;
           cursor: pointer;
           transition: all 0.3s ease;
@@ -442,7 +452,7 @@ export const HomeScreen = () => {
         
         /* GALERÍA */
         .andrea-galeria {
-          padding: 2rem 0 6rem;
+          padding: 2rem 0 4rem;
           background: white;
         }
         
@@ -503,11 +513,11 @@ export const HomeScreen = () => {
         
         .obra-info {
           text-align: center;
-          margin-top: 1.5rem;
+          margin-top: 1.2rem;
         }
         
         .obra-info h3 {
-          font-size: 1.5rem;
+          font-size: 1.3rem;
           color: #3a2a24;
           margin-bottom: 0.3rem;
         }
@@ -515,24 +525,26 @@ export const HomeScreen = () => {
         .obra-info p {
           color: #8b6b5c;
           margin-bottom: 0.3rem;
+          font-size: 0.9rem;
         }
         
         .obra-tecnica {
-          font-size: 0.9rem;
+          font-size: 0.85rem;
           color: #c17b5e !important;
         }
         
         /* SOBRE */
         .andrea-sobre {
-          padding: 6rem 0;
+          padding: 4rem 0;
           background: #fdf8f3;
         }
         
         .sobre-imagen {
           position: relative;
-          border-radius: 40px;
+          border-radius: 30px;
           overflow: hidden;
           box-shadow: 0 25px 45px rgba(0,0,0,0.15);
+          margin-bottom: 2rem;
         }
         
         .sobre-imagen img {
@@ -543,75 +555,76 @@ export const HomeScreen = () => {
         
         .sobre-mandala {
           position: absolute;
-          bottom: -30px;
-          right: -30px;
-          width: 120px;
-          height: 120px;
+          bottom: -20px;
+          right: -20px;
+          width: 80px;
+          height: 80px;
           background: rgba(193, 123, 94, 0.1);
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 3rem;
+          font-size: 2rem;
           color: #c17b5e;
           animation: girar 25s linear infinite;
         }
         
         .andrea-sobre h2 {
-          font-size: 3rem;
+          font-size: 2.5rem;
           font-weight: 300;
           color: #3a2a24;
-          margin-bottom: 1.5rem;
+          margin-bottom: 1rem;
         }
         
         .sobre-linea {
-          width: 80px;
+          width: 60px;
           height: 2px;
           background: #c17b5e;
-          margin-bottom: 2rem;
+          margin-bottom: 1.5rem;
         }
         
         .sobre-texto-grande {
-          font-size: 1.8rem;
+          font-size: 1.4rem;
           font-style: italic;
           color: #5d4a40;
-          margin-bottom: 1.5rem;
+          margin-bottom: 1.2rem;
           line-height: 1.5;
         }
         
         .sobre-texto {
-          font-size: 1.2rem;
+          font-size: 1rem;
           color: #8b6b5c;
-          margin-bottom: 1.5rem;
-          line-height: 1.8;
+          margin-bottom: 1.2rem;
+          line-height: 1.6;
         }
         
         .sobre-firma {
-          font-size: 2rem;
+          font-size: 1.8rem;
           color: #c17b5e;
-          margin-top: 2rem;
+          margin-top: 1.5rem;
           font-family: 'Cormorant Garamond', serif;
         }
         
         /* PROCESO */
         .andrea-proceso {
-          padding: 6rem 0;
+          padding: 4rem 0;
           background: white;
         }
         
         .andrea-proceso h2 {
-          font-size: 2.8rem;
+          font-size: 2.2rem;
           font-weight: 300;
           color: #3a2a24;
         }
         
         .proceso-card {
           text-align: center;
-          padding: 2rem;
+          padding: 1.5rem;
           background: #fdf8f3;
           border-radius: 30px;
           height: 100%;
           transition: transform 0.3s ease;
+          margin-bottom: 1rem;
         }
         
         .proceso-card:hover {
@@ -620,66 +633,168 @@ export const HomeScreen = () => {
         }
         
         .proceso-numero {
-          font-size: 3rem;
+          font-size: 2.5rem;
           color: #c17b5e;
           opacity: 0.3;
           font-weight: 300;
-          margin-bottom: 1rem;
+          margin-bottom: 0.8rem;
         }
         
         .proceso-card h3 {
-          font-size: 1.8rem;
+          font-size: 1.5rem;
           color: #3a2a24;
-          margin-bottom: 1rem;
+          margin-bottom: 0.8rem;
         }
         
         .proceso-card p {
           color: #8b6b5c;
-          font-size: 1.1rem;
-          line-height: 1.6;
+          font-size: 1rem;
+          line-height: 1.5;
         }
         
         /* TESTIMONIOS */
         .andrea-testimonios {
-          padding: 5rem 0;
+          padding: 4rem 0;
           background: #f9eee7;
         }
         
         .testimonio-icono {
-          font-size: 4rem;
+          font-size: 3rem;
           color: #c17b5e;
           opacity: 0.5;
           margin-bottom: 1rem;
         }
         
         .testimonio-texto {
-          font-size: 1.8rem;
+          font-size: 1.4rem;
           font-style: italic;
           color: #3a2a24;
-          line-height: 1.6;
-          margin-bottom: 2rem;
+          line-height: 1.5;
+          margin-bottom: 1.5rem;
+          padding: 0 15px;
         }
         
         .testimonio-autor {
-          font-size: 1.2rem;
+          font-size: 1rem;
           color: #8b6b5c;
         }
         
         /* CONTACTO */
         .andrea-contacto {
-          padding: 6rem 0;
+          padding: 4rem 0;
           background: white;
         }
         
         .andrea-contacto h2 {
-          font-size: 2.5rem;
+          font-size: 2rem;
           font-weight: 300;
           color: #3a2a24;
-          margin-bottom: 1.5rem;
+          margin-bottom: 1rem;
         }
         
         .andrea-contacto p {
-          font-size: 1.3rem;
+          font-size: 1.1rem;
           color: #8b6b5c;
+          margin-bottom: 2rem;
         }
-     
+        
+        .contacto-boton {
+          display: inline-block;
+          width: 100%;
+          max-width: 280px;
+          margin: 0 auto 2rem;
+        }
+        
+        .contacto-redes {
+          display: flex;
+          justify-content: center;
+          gap: 1.5rem;
+        }
+        
+        .contacto-redes a {
+          color: #8b6b5c;
+          text-decoration: none;
+          font-size: 1rem;
+          letter-spacing: 1px;
+          transition: color 0.3s ease;
+        }
+        
+        .contacto-redes a:hover {
+          color: #c17b5e;
+        }
+        
+        /* MODAL */
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0,0,0,0.95);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+          padding: 1rem;
+        }
+        
+        .modal-contenido {
+          background: #fdf8f3;
+          border-radius: 30px;
+          max-width: 95vw;
+          max-height: 90vh;
+          overflow: auto;
+          position: relative;
+          padding: 1.5rem;
+        }
+        
+        .modal-cerrar {
+          position: absolute;
+          top: 0.5rem;
+          right: 0.5rem;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: #c17b5e;
+          color: white;
+          border: none;
+          font-size: 1.5rem;
+          cursor: pointer;
+          z-index: 10;
+        }
+        
+        .modal-contenido img {
+          width: 100%;
+          max-height: 50vh;
+          object-fit: contain;
+          border-radius: 20px;
+          margin-bottom: 1rem;
+        }
+        
+        .modal-info h3 {
+          font-size: 1.5rem;
+          color: #3a2a24;
+          margin-bottom: 0.3rem;
+        }
+        
+        .modal-categoria {
+          color: #c17b5e;
+          font-size: 1rem;
+          margin-bottom: 0.3rem;
+        }
+        
+        .modal-tecnica {
+          color: #8b6b5c;
+          font-style: italic;
+          font-size: 0.9rem;
+          margin-bottom: 0.5rem;
+        }
+        
+        .modal-descripcion {
+          color: #5d4a40;
+          font-size: 1rem;
+        }
+      `}</style>
+    </div>
+  );
+};
