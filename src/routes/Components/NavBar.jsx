@@ -29,7 +29,7 @@ export const NavBar = () => {
             <nav style={{ color: '#ffffff', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }} className={`navbar navbar-expand-lg navbar-dark ${scrolled ? 'bg-transparent' : 'bg-transparent'} ${scrolled ? 'scrolled' : ''}`}>
 
   <Link to="/" className="navbar-brand" href="#" onClick={() => window.scrollTo(0, 0)}>
-    <img src="../../../img/Alekh.png" className="navbar-brand-logo" alt="logo"></img>
+    <img src="/Logo elegante de Alekhart.png" className="navbar-brand-logo" alt="logo"></img>
   </Link>
 
   <button
