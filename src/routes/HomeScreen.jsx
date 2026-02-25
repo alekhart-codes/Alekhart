@@ -4,7 +4,7 @@ import FAQSection from "./Components/FAQSection";
 import { AboutScreen } from "./AboutScreen";
 import ReactProjectsSlider from "./Components/ReactPRojectSlider";
 
-export const AndreaHome = () => {
+export const HomeScreen = () => {
   const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
 
   const obras = [
