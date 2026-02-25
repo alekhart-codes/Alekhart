@@ -25,91 +25,108 @@ export const NavBar = () => {
         <>
             <style>{`
                 .navbar-brand {
-                    max-width: 180px; /* Controla el ancho máximo del contenedor del logo */
+                    max-width: 320px;
                     padding: 0;
-                    margin-right: auto; /* Empuja el toggle a la derecha */
+                    margin-right: auto;
                 }
 
                 .navbar-brand-logo {
-                    max-height: 60px; /* Altura máxima del logo */
-                    width: auto; /* Mantiene la proporción */
+                    max-height: 130px;
+                    width: auto;
                     height: auto;
                     transition: max-height 0.3s ease;
                 }
 
-                /* Tamaño más pequeño cuando se hace scroll */
                 .scrolled .navbar-brand-logo {
-                    max-height: 45px;
+                    max-height: 110px;
                 }
 
-                /* Responsive para móviles */
                 @media (max-width: 991px) {
                     .navbar-brand {
-                        max-width: 140px;
+                        max-width: 280px;
                     }
                     
                     .navbar-brand-logo {
-                        max-height: 50px;
+                        max-height: 110px;
                     }
 
                     .scrolled .navbar-brand-logo {
-                        max-height: 40px;
+                        max-height: 95px;
                     }
                 }
 
                 @media (max-width: 576px) {
                     .navbar-brand {
-                        max-width: 120px;
+                        max-width: 240px;
                     }
                     
                     .navbar-brand-logo {
-                        max-height: 45px;
+                        max-height: 95px;
                     }
 
                     .scrolled .navbar-brand-logo {
-                        max-height: 35px;
+                        max-height: 80px;
                     }
                 }
 
-                /* Asegura que el toggle esté bien posicionado */
                 .navbar-toggler {
                     border: none;
-                    padding: 0.5rem;
-                    margin-left: auto; /* Empuja el toggle a la derecha */
-                    order: 2; /* Lo coloca después del logo */
+                    padding: 0.7rem;
+                    margin-left: auto;
+                    order: 2;
                 }
 
-                /* Opcional: efecto hover suave */
-                .navbar-brand-logo:hover {
-                    opacity: 0.9;
-                    transform: scale(1.02);
+                .navbar-toggler-icon {
+                    width: 2em;
+                    height: 2em;
                 }
 
-                /* Mejora el collapse en móvil */
+                .navbar-toggler:focus {
+                    box-shadow: none;
+                    outline: none;
+                }
+
                 .navbar-collapse {
-                    background: rgba(0, 0, 0, 0.9);
-                    padding: 1rem;
-                    border-radius: 10px;
-                    margin-top: 1rem;
+                    background: transparent;
+                    padding: 0;
+                    margin-top: 0;
                     order: 3;
                 }
 
-                @media (min-width: 992px) {
+                @media (max-width: 991px) {
                     .navbar-collapse {
-                        background: transparent;
-                        padding: 0;
-                        margin-top: 0;
+                        background: rgba(0, 0, 0, 0.9);
+                        padding: 1.5rem;
+                        border-radius: 15px;
+                        margin-top: 1rem;
+                        backdrop-filter: blur(5px);
                     }
+
+                    .nav-link {
+                        font-size: 1.3rem;
+                        padding: 0.8rem 0;
+                    }
+                }
+
+                .nav-link {
+                    color: #ffffff !important;
+                    font-size: 1.2rem;
+                    font-weight: 400;
+                    transition: opacity 0.3s ease;
+                    letter-spacing: 0.5px;
+                }
+
+                .nav-link:hover {
+                    opacity: 0.8;
                 }
             `}</style>
 
             <nav 
                 style={{ 
-                    color: '#ffffff', 
-                    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
+                    color: '#ffffff',
                     transition: 'all 0.3s ease'
                 }} 
-                className={`navbar navbar-expand-lg navbar-dark ${scrolled ? 'bg-transparent scrolled' : 'bg-transparent'}`}
+                className={`navbar navbar-expand-lg navbar-dark ${scrolled ? 'scrolled' : ''}`}
             >
                 <div className="container-fluid">
                     <Link to="/" className="navbar-brand" onClick={() => window.scrollTo(0, 0)}>
@@ -133,14 +150,14 @@ export const NavBar = () => {
                     </button>
                     
                     <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
-                        <ul className="navbar-nav ml-auto">
-                            <li className="nav-item me-3">
-                                <a href="#faq-section" className="nav-link" style={{ color: '#ffffff' }}>
+                        <ul className="navbar-nav ml-auto align-items-center">
+                            <li className="nav-item me-4">
+                                <a href="#faq-section" className="nav-link">
                                     FAQs
                                 </a>
                             </li>
-                            <li className="nav-item me-3">
-                                <NavLink to="/contact" className="nav-link" style={{ color: '#ffffff' }}>
+                            <li className="nav-item me-4">
+                                <NavLink to="/contact" className="nav-link">
                                     Contact
                                 </NavLink>
                             </li>
