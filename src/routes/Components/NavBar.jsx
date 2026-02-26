@@ -40,11 +40,18 @@ export const NavBar = () => {
                     backdrop-filter: blur(8px);
                 }
 
-                /* Mantener todos tus estilos originales */
+                /* Estilos específicos para alinear el menú a la izquierda */
+                .navbar .container-fluid {
+                    display: flex;
+                    justify-content: flex-start !important;
+                    align-items: center;
+                    gap: 2rem;
+                }
+
                 .navbar-brand {
                     max-width: 400px;
                     padding: 0;
-                    margin-right: auto;
+                    margin-right: 0 !important;
                 }
 
                 .navbar-brand-logo {
@@ -58,9 +65,24 @@ export const NavBar = () => {
                     max-height: 120px;
                 }
 
+                /* Menú a la izquierda */
+                .navbar-collapse {
+                    flex-grow: 0 !important;
+                }
+
+                .navbar-nav {
+                    margin-left: 0 !important;
+                    padding-left: 0;
+                }
+
                 @media (max-width: 991px) {
                     .navbar {
                         padding: 0.8rem 1rem;
+                    }
+
+                    .navbar .container-fluid {
+                        gap: 1rem;
+                        justify-content: space-between !important;
                     }
                     
                     .navbar-brand {
@@ -74,6 +96,15 @@ export const NavBar = () => {
                     .scrolled .navbar-brand-logo {
                         max-height: 180px;
                     }
+
+                    .navbar-collapse {
+                        flex-grow: 1 !important;
+                        position: absolute;
+                        top: 100%;
+                        left: 0;
+                        right: 0;
+                        width: 100%;
+                    }
                 }
 
                 @media (max-width: 576px) {
@@ -86,6 +117,7 @@ export const NavBar = () => {
                     }
                 }
 
+                /* Botón hamburguesa con color terracota cuando NO está abierto */
                 .navbar-toggler {
                     border: none;
                     padding: 0.7rem;
@@ -94,10 +126,12 @@ export const NavBar = () => {
                     background: transparent;
                 }
 
-                .navbar-toggler-icon {
-                    width: 2.2em;
-                    height: 2.2em;
-                    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='white' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+                .navbar-toggler.collapsed .navbar-toggler-icon {
+                    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23c17b5e' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+                }
+
+                .navbar-toggler:not(.collapsed) .navbar-toggler-icon {
+                    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='white' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
                 }
 
                 .navbar-toggler:focus {
@@ -105,6 +139,7 @@ export const NavBar = () => {
                     outline: none;
                 }
 
+                /* Estilos del menú colapsable */
                 .navbar-collapse {
                     background: transparent;
                     padding: 0;
@@ -125,6 +160,7 @@ export const NavBar = () => {
                         font-size: 1.4rem;
                         padding: 0.8rem 0;
                         text-align: center;
+                        color: #ffffff !important;
                     }
                 }
 
@@ -166,7 +202,7 @@ export const NavBar = () => {
                     </Link>
 
                     <button
-                        className="navbar-toggler"
+                        className="navbar-toggler collapsed"
                         type="button"
                         data-bs-toggle="collapse"
                         data-bs-target="#navbarNav"
@@ -177,8 +213,8 @@ export const NavBar = () => {
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     
-                    <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
-                        <ul className="navbar-nav ml-auto align-items-center">
+                    <div className="collapse navbar-collapse" id="navbarNav">
+                        <ul className="navbar-nav">
                             <li className="nav-item me-4">
                                 <a href="#faq-section" className="nav-link">
                                     FAQs
