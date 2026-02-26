@@ -76,8 +76,63 @@ export const NavBar = () => {
                     height: 45px;
                 }
 
-                .menu-toggle {
+                /* ===== MENÚ HORIZONTAL PARA DESKTOP ===== */
+                .menu-desktop {
                     display: flex;
+                    align-items: center;
+                    gap: 2rem;
+                }
+
+                .menu-desktop-item {
+                    background: none;
+                    border: none;
+                    color: #3a2a24;
+                    font-size: 1rem;
+                    letter-spacing: 1px;
+                    cursor: pointer;
+                    padding: 0.5rem 0;
+                    font-family: 'Cormorant Garamond', serif;
+                    transition: color 0.3s ease;
+                    border-bottom: 1px solid transparent;
+                }
+
+                .menu-desktop-item:hover {
+                    color: #c17b5e;
+                    border-bottom-color: #c17b5e;
+                }
+
+                .menu-desktop-carrito {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    background: none;
+                    border: 1px solid #c17b5e;
+                    border-radius: 2rem;
+                    padding: 0.4rem 1.2rem;
+                    color: #3a2a24;
+                    font-size: 1rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    position: relative;
+                }
+
+                .menu-desktop-carrito:hover {
+                    background: rgba(193, 123, 94, 0.1);
+                    transform: translateY(-2px);
+                }
+
+                .menu-desktop-contador {
+                    background: #c17b5e;
+                    color: white;
+                    padding: 0.2rem 0.5rem;
+                    border-radius: 50%;
+                    font-size: 0.7rem;
+                    margin-left: 0.3rem;
+                }
+
+                /* ===== MENÚ HAMBURGUESA PARA MÓVIL ===== */
+                .menu-toggle {
+                    display: none;
                     flex-direction: column;
                     justify-content: space-around;
                     width: 35px;
@@ -185,21 +240,16 @@ export const NavBar = () => {
                     visibility: visible;
                 }
 
-                @media (min-width: 769px) {
-                    .menu-toggle {
-                        display: none;
-                    }
-                    
-                    .menu-desplegable {
-                        display: none;
-                    }
-                    
-                    .menu-overlay {
-                        display: none;
-                    }
-                }
-
+                /* ===== RESPONSIVE ===== */
                 @media (max-width: 768px) {
+                    .menu-desktop {
+                        display: none;
+                    }
+
+                    .menu-toggle {
+                        display: flex;
+                    }
+
                     .navbar-personalizado {
                         padding: 0.8rem 1rem;
                     }
@@ -210,6 +260,12 @@ export const NavBar = () => {
                     
                     .scrolled .navbar-logo img {
                         height: 35px;
+                    }
+                }
+
+                @media (min-width: 769px) {
+                    .menu-toggle, .menu-desplegable, .menu-overlay {
+                        display: none;
                     }
                 }
 
@@ -233,6 +289,23 @@ export const NavBar = () => {
                         />
                     </Link>
 
+                    {/* MENÚ PARA DESKTOP */}
+                    <div className="menu-desktop">
+                        <button onClick={() => handleNavigation('/about')} className="menu-desktop-item">
+                            Sobre mí
+                        </button>
+                        <button onClick={() => handleNavigation('/contact')} className="menu-desktop-item">
+                            Contacto
+                        </button>
+                        <button onClick={handleAbrirCarrito} className="menu-desktop-carrito">
+                            <span>🛒 Carrito</span>
+                            {totalItems > 0 && (
+                                <span className="menu-desktop-contador">{totalItems}</span>
+                            )}
+                        </button>
+                    </div>
+
+                    {/* BOTÓN HAMBURGUESA PARA MÓVIL */}
                     <button 
                         className={`menu-toggle ${menuAbierto ? 'activo' : ''}`}
                         onClick={() => setMenuAbierto(!menuAbierto)}
@@ -245,6 +318,7 @@ export const NavBar = () => {
                 </div>
             </nav>
 
+            {/* MENÚ DESPLEGABLE PARA MÓVIL */}
             <div className={`menu-desplegable ${menuAbierto ? 'abierto' : ''}`}>
                 <button onClick={() => handleNavigation('/about')} className="menu-item">
                     Sobre mí
@@ -260,6 +334,7 @@ export const NavBar = () => {
                 </button>
             </div>
 
+            {/* OVERLAY PARA CERRAR MENÚ MÓVIL */}
             <div 
                 className={`menu-overlay ${menuAbierto ? 'visible' : ''}`}
                 onClick={() => setMenuAbierto(false)}
