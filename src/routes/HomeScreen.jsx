@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { UsuarioContext } from "../context/UsuarioContext";
 import FAQSection from "./Components/FAQSection";
 import { AboutScreen } from "./AboutScreen";
 import ReactProjectsSlider from "./Components/ReactPRojectSlider";
 
 export const HomeScreen = () => {
-  const { usuario } = React.useContext(UsuarioContext);
+  const { usuario, mostrarCarrito, setMostrarCarrito } = useContext(UsuarioContext);
   const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("todas");
   const [modoVista, setModoVista] = useState("portfolio");
   const [carrito, setCarrito] = useState([]);
-  const [mostrarCarrito, setMostrarCarrito] = useState(false);
   const [notificacion, setNotificacion] = useState(null);
   const [productosConPrecioVisible, setProductosConPrecioVisible] = useState({});
   const fadeRefs = useRef([]);
@@ -33,7 +32,6 @@ export const HomeScreen = () => {
 
   // FORZAR VISIBILIDAD INICIAL
   useEffect(() => {
-    // Forzar que las obras sean visibles desde el inicio
     setTimeout(() => {
       document.querySelectorAll('.obra-card').forEach(el => {
         el.style.opacity = '1';
@@ -705,7 +703,7 @@ export const HomeScreen = () => {
         </div>
       )}
 
-      {/* CARRITO MODAL */}
+      {/* CARRITO MODAL - AHORA USA EL CONTEXTO */}
       {mostrarCarrito && (
         <div className="carrito-overlay" onClick={() => setMostrarCarrito(false)}>
           <div className="carrito-modal" onClick={(e) => e.stopPropagation()}>
@@ -794,7 +792,7 @@ export const HomeScreen = () => {
         </div>
       )}
 
-      {/* ESTILOS - SIN EL NAVBAR DEL HOME */}
+      {/* ESTILOS */}
       <style>{`
         * {
           margin: 0;
@@ -819,7 +817,6 @@ export const HomeScreen = () => {
           to { transform: rotate(360deg); }
         }
 
-        /* HERO */
         .hero {
           min-height: 100vh;
           display: flex;
@@ -827,7 +824,7 @@ export const HomeScreen = () => {
           position: relative;
           background: linear-gradient(135deg, #fdf8f3 0%, #f9eee7 100%);
           padding: 80px 2rem 2rem;
-          margin-top: 70px; /* Espacio para el navbar fijo */
+          margin-top: 70px;
         }
 
         .hero-fondo {
@@ -925,7 +922,6 @@ export const HomeScreen = () => {
           text-align: center;
         }
 
-        /* VISTA SELECTOR */
         .vista-selector {
           padding: 2rem 0 1rem;
           margin-top: 0.5rem;
@@ -961,7 +957,6 @@ export const HomeScreen = () => {
           font-size: 1.2rem;
         }
 
-        /* FILTROS */
         .filtros-section {
           padding: 2rem 0;
         }
@@ -997,7 +992,6 @@ export const HomeScreen = () => {
           border-color: #c17b5e;
         }
 
-        /* GALERÍA */
         .galeria-section {
           padding: 1rem 0 4rem;
           min-height: 600px;
@@ -1129,28 +1123,6 @@ export const HomeScreen = () => {
           font-size: 0.85rem;
         }
 
-        /* TIENDA */
-        .carrito-icono {
-          background: none;
-          border: none;
-          font-size: 1.3rem;
-          cursor: pointer;
-          position: relative;
-          padding: 0.5rem;
-        }
-
-        .carrito-contador {
-          position: absolute;
-          top: 0;
-          right: 0;
-          background: #c17b5e;
-          color: white;
-          font-size: 0.7rem;
-          padding: 2px 6px;
-          border-radius: 50%;
-          min-width: 18px;
-        }
-
         .tienda-instrucciones {
           text-align: center;
           color: #8b6b5c;
@@ -1209,7 +1181,6 @@ export const HomeScreen = () => {
           margin-top: 0.3rem;
         }
 
-        /* SOBRE */
         .sobre-section {
           padding: 5rem 0;
           background: #fdf8f3;
@@ -1276,7 +1247,6 @@ export const HomeScreen = () => {
           margin-top: 1.5rem;
         }
 
-        /* PROCESO */
         .proceso-section {
           padding: 5rem 0;
         }
@@ -1319,7 +1289,6 @@ export const HomeScreen = () => {
           color: #8b6b5c;
         }
 
-        /* TESTIMONIOS */
         .testimonios-section {
           padding: 5rem 0;
           background: #f9eee7;
@@ -1349,7 +1318,6 @@ export const HomeScreen = () => {
           color: #8b6b5c;
         }
 
-        /* CONTACTO */
         .contacto-section {
           padding: 5rem 0;
         }
@@ -1399,7 +1367,6 @@ export const HomeScreen = () => {
           color: #c17b5e;
         }
 
-        /* FOOTER */
         .footer {
           text-align: center;
           padding: 2rem;
@@ -1408,7 +1375,6 @@ export const HomeScreen = () => {
           font-size: 0.9rem;
         }
 
-        /* FADE */
         .fade {
           opacity: 0;
           transform: translateY(30px);
@@ -1420,7 +1386,6 @@ export const HomeScreen = () => {
           transform: translateY(0);
         }
 
-        /* MODALES */
         .modal-overlay {
           position: fixed;
           inset: 0;
@@ -1493,7 +1458,6 @@ export const HomeScreen = () => {
           color: #5d4a40;
         }
 
-        /* MODAL COMPRA */
         .modal-compra {
           max-width: 1000px !important;
           padding: 2rem;
@@ -1598,7 +1562,6 @@ export const HomeScreen = () => {
           transform: translateY(-2px);
         }
 
-        /* CARRITO */
         .carrito-overlay {
           position: fixed;
           inset: 0;
@@ -1786,7 +1749,6 @@ export const HomeScreen = () => {
           background: #128C7E;
         }
 
-        /* NOTIFICACIONES */
         .notificacion {
           position: fixed;
           bottom: 2rem;
@@ -1814,7 +1776,6 @@ export const HomeScreen = () => {
           to { transform: translate(-50%, 0); opacity: 1; }
         }
 
-        /* RESPONSIVE */
         @media (max-width: 992px) {
           .sobre-grid {
             grid-template-columns: 1fr;
