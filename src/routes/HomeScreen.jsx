@@ -14,10 +14,25 @@ export const HomeScreen = () => {
   const [notificacion, setNotificacion] = useState(null);
   const [productosConPrecioVisible, setProductosConPrecioVisible] = useState({});
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const fadeRefs = useRef([]);
 
   // Número de WhatsApp
   const WHATSAPP_NUMBER = "569XXXXXXXX";
+
+  // Detectar scroll para cambiar opacidad del navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Cargar carrito desde localStorage
   useEffect(() => {
@@ -412,8 +427,8 @@ export const HomeScreen = () => {
 
   return (
     <div className="home-container">
-      {/* NAVBAR CON TOGGLE Y COLORES DE LA PÁGINA */}
-      <nav className="navbar">
+      {/* NAVBAR - TÍTULO DE COLOR, AL SCROLL SEMITRANSPARENTE */}
+      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
           <div className="brand" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
             <img 
@@ -868,7 +883,7 @@ export const HomeScreen = () => {
         </div>
       )}
 
-      {/* ESTILOS CON TOGGLE Y COLORES DE LA PÁGINA */}
+      {/* ESTILOS - TÍTULO DE COLOR, SCROLL SEMITRANSPARENTE */}
       <style>{`
         * {
           margin: 0;
@@ -888,16 +903,21 @@ export const HomeScreen = () => {
           min-height: 100vh;
         }
 
-        /* NAVBAR CON TOGGLE */
+        /* NAVBAR - TÍTULO DE COLOR, AL SCROLL SEMITRANSPARENTE */
         .navbar {
           position: fixed;
           top: 0;
           width: 100%;
-          background: rgba(253, 248, 243, 0.95);
-          backdrop-filter: blur(10px);
+          background: #c17b5e; /* Color sólido del título */
           padding: 1rem 0;
           z-index: 1000;
-          border-bottom: 1px solid rgba(193, 123, 94, 0.1);
+          border-bottom: 1px solid rgba(255,255,255,0.1);
+          transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+          background: rgba(193, 123, 94, 0.85); /* Semitransparente al hacer scroll */
+          backdrop-filter: blur(8px);
         }
 
         .nav-container {
@@ -920,6 +940,7 @@ export const HomeScreen = () => {
           width: auto;
           display: block;
           object-fit: contain;
+          filter: brightness(0) invert(1); /* Logo blanco sobre fondo color */
         }
 
         /* Botón toggle */
@@ -939,14 +960,13 @@ export const HomeScreen = () => {
         .menu-toggle span {
           width: 30px;
           height: 3px;
-          background: #c17b5e;
+          background: white;
           border-radius: 10px;
           transition: all 0.3s linear;
         }
 
         .menu-toggle.activo span:nth-child(1) {
           transform: rotate(45deg) translate(5px, 5px);
-          background: #c17b5e;
         }
 
         .menu-toggle.activo span:nth-child(2) {
@@ -955,7 +975,6 @@ export const HomeScreen = () => {
 
         .menu-toggle.activo span:nth-child(3) {
           transform: rotate(-45deg) translate(7px, -6px);
-          background: #c17b5e;
         }
 
         /* Enlaces de navegación */
@@ -968,40 +987,40 @@ export const HomeScreen = () => {
         .nav-link-btn {
           background: none;
           border: none;
-          color: #3a2a24;
+          color: white;
           font-size: 0.9rem;
           letter-spacing: 1px;
           cursor: pointer;
           padding: 0.5rem 0;
           font-family: 'Cormorant Garamond', serif;
-          transition: color 0.3s ease;
+          transition: opacity 0.3s ease;
         }
 
         .nav-link-btn:hover {
-          color: #c17b5e;
+          opacity: 0.8;
         }
 
         .carrito-icono {
           display: flex;
           align-items: center;
           gap: 0.3rem;
-          background: none;
-          border: 1px solid #d4b2a0;
+          background: rgba(255,255,255,0.2);
+          border: 1px solid rgba(255,255,255,0.3);
           border-radius: 2rem;
           padding: 0.3rem 1rem;
           position: relative;
+          color: white;
         }
 
         .carrito-icono:hover {
-          background: rgba(193, 123, 94, 0.1);
-          border-color: #c17b5e;
+          background: rgba(255,255,255,0.3);
         }
 
         .carrito-contador {
           position: absolute;
           top: -6px;
           right: -6px;
-          background: #c17b5e;
+          background: #4a7c59;
           color: white;
           font-size: 0.7rem;
           padding: 2px 6px;
@@ -1023,15 +1042,18 @@ export const HomeScreen = () => {
             width: 70%;
             max-width: 300px;
             height: 100vh;
-            background: rgba(253, 248, 243, 0.98);
-            backdrop-filter: blur(10px);
+            background: #c17b5e;
             flex-direction: column;
             justify-content: center;
             gap: 2rem;
             padding: 2rem;
             transition: right 0.3s ease;
             box-shadow: -5px 0 15px rgba(0,0,0,0.1);
-            border-left: 1px solid rgba(193, 123, 94, 0.2);
+          }
+
+          .navbar.scrolled .nav-links {
+            background: rgba(193, 123, 94, 0.95);
+            backdrop-filter: blur(8px);
           }
 
           .nav-links.abierto {
@@ -1051,7 +1073,7 @@ export const HomeScreen = () => {
           }
         }
 
-        /* HERO */
+        /* HERO - ajuste por navbar fijo */
         .hero {
           min-height: 100vh;
           display: flex;
@@ -1059,6 +1081,7 @@ export const HomeScreen = () => {
           position: relative;
           background: linear-gradient(135deg, #fdf8f3 0%, #f9eee7 100%);
           padding: 80px 2rem 2rem;
+          margin-top: 70px; /* Altura del navbar */
         }
 
         .hero-fondo {
@@ -1164,7 +1187,6 @@ export const HomeScreen = () => {
         /* VISTA SELECTOR */
         .vista-selector {
           padding: 2rem 0 1rem;
-          margin-top: 0.5rem;
         }
 
         .vista-wrapper {
@@ -1322,8 +1344,7 @@ export const HomeScreen = () => {
           padding-bottom: 5px;
         }
 
-        .badge-vendido,
-        .badge-disponible {
+        .badge-vendido {
           position: absolute;
           top: 10px;
           right: 10px;
@@ -1332,15 +1353,7 @@ export const HomeScreen = () => {
           font-size: 0.8rem;
           font-weight: 500;
           z-index: 2;
-        }
-
-        .badge-vendido {
           background: #c17b5e;
-          color: white;
-        }
-
-        .badge-disponible {
-          background: #4a7c59;
           color: white;
         }
 
