@@ -240,36 +240,26 @@ export const HomeScreen = () => {
   const handleProductClick = (producto, e) => {
     e.stopPropagation();
     
-    // Verificar si hay algún formato disponible
     const tieneDisponible = Object.values(producto.formatos).some(f => f.disponible);
     if (!tieneDisponible) {
       mostrarNotificacion('Producto no disponible', 'error');
       return;
     }
 
-    // Si ya tiene el precio visible, abrir selector de formato
     if (productosConPrecioVisible[producto.id]) {
       setProductoSeleccionado(producto);
-      
-      // Seleccionar el primer formato disponible
       const primerDisponible = Object.entries(producto.formatos)
         .find(([_, formato]) => formato.disponible);
       setFormatoSeleccionado(primerDisponible?.[0] || "original");
-      
-      // Resetear precio visible después de abrir modal
       setProductosConPrecioVisible({});
     } else {
-      // Mostrar precio (primer formato disponible)
       setProductosConPrecioVisible({ [producto.id]: true });
-      
-      // Auto-ocultar después de 3 segundos
       setTimeout(() => {
         setProductosConPrecioVisible({});
       }, 3000);
     }
   };
 
-  // Estados para el modal de formato
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const [formatoSeleccionado, setFormatoSeleccionado] = useState("original");
 
@@ -277,7 +267,6 @@ export const HomeScreen = () => {
     setProductoSeleccionado(null);
   };
 
-  // Agregar al carrito desde el modal
   const agregarAlCarrito = () => {
     if (!productoSeleccionado) return;
     
@@ -313,13 +302,11 @@ export const HomeScreen = () => {
     cerrarModalCompra();
   };
 
-  // Eliminar del carrito
   const eliminarDelCarrito = (id) => {
     setCarrito(prev => prev.filter(item => item.id !== id));
     mostrarNotificacion('Producto eliminado');
   };
 
-  // Actualizar cantidad
   const actualizarCantidad = (id, nuevaCantidad) => {
     if (nuevaCantidad < 1) {
       eliminarDelCarrito(id);
@@ -335,12 +322,10 @@ export const HomeScreen = () => {
     );
   };
 
-  // Calcular total
   const calcularTotal = () => {
     return carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
   };
 
-  // Vaciar carrito
   const vaciarCarrito = () => {
     if (window.confirm('¿Eliminar todos los productos del carrito?')) {
       setCarrito([]);
@@ -348,7 +333,6 @@ export const HomeScreen = () => {
     }
   };
 
-  // Enviar a WhatsApp
   const enviarWhatsApp = () => {
     if (carrito.length === 0) {
       mostrarNotificacion('El carrito está vacío', 'error');
@@ -368,7 +352,7 @@ export const HomeScreen = () => {
 
   return (
     <div className="home-container">
-      {/* NAVBAR con carrito */}
+      {/* NAVBAR */}
       <nav className="navbar">
         <div className="nav-container">
           <div className="brand">
@@ -498,6 +482,9 @@ export const HomeScreen = () => {
                     src={elemento.imagen} 
                     alt={elemento.titulo} 
                     loading="lazy"
+                    onLoad={(e) => {
+                      e.target.style.opacity = '1';
+                    }}
                   />
                   
                   {modoVista === 'portfolio' && (
@@ -795,9 +782,8 @@ export const HomeScreen = () => {
         </div>
       )}
 
-      {/* ESTILOS COMPLETOS (originales + nuevos) */}
+      {/* ESTILOS */}
       <style jsx>{`
-        /* ===== ESTILOS ORIGINALES ===== */
         * {
           margin: 0;
           padding: 0;
@@ -816,12 +802,12 @@ export const HomeScreen = () => {
           min-height: 100vh;
         }
 
-        /* Navbar */
+        /* NAVBAR */
         .navbar {
           position: fixed;
           top: 0;
           width: 100%;
-          background: rgba(253, 248, 243, 0.9);
+          background: rgba(253, 248, 243, 0.95);
           backdrop-filter: blur(10px);
           padding: 1rem 0;
           z-index: 1000;
@@ -852,6 +838,7 @@ export const HomeScreen = () => {
 
         .brand-text {
           font-size: 1.2rem;
+          font-weight: 400;
           color: #c17b5e;
           letter-spacing: 2px;
         }
@@ -879,14 +866,14 @@ export const HomeScreen = () => {
           to { transform: rotate(360deg); }
         }
 
-        /* Hero */
+        /* HERO */
         .hero {
           min-height: 100vh;
           display: flex;
           align-items: center;
           position: relative;
           background: linear-gradient(135deg, #fdf8f3 0%, #f9eee7 100%);
-          padding: 6rem 2rem 2rem;
+          padding: 80px 2rem 2rem;
         }
 
         .hero-fondo {
@@ -967,7 +954,6 @@ export const HomeScreen = () => {
           backdrop-filter: blur(5px);
         }
 
-        /* Secciones generales */
         .container {
           max-width: 1200px;
           margin: 0 auto;
@@ -985,9 +971,10 @@ export const HomeScreen = () => {
           text-align: center;
         }
 
-        /* Vista selector */
+        /* VISTA SELECTOR */
         .vista-selector {
-          padding: 2rem 0 0;
+          padding: 2rem 0 1rem;
+          margin-top: 0.5rem;
         }
 
         .vista-wrapper {
@@ -1020,7 +1007,7 @@ export const HomeScreen = () => {
           font-size: 1.2rem;
         }
 
-        /* Filtros */
+        /* FILTROS */
         .filtros-section {
           padding: 2rem 0;
         }
@@ -1056,15 +1043,17 @@ export const HomeScreen = () => {
           border-color: #c17b5e;
         }
 
-        /* Galería */
+        /* GALERÍA */
         .galeria-section {
-          padding: 2rem 0 4rem;
+          padding: 1rem 0 4rem;
+          min-height: 600px;
         }
 
         .galeria-grid {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
           gap: 2.5rem;
+          min-height: 400px;
         }
 
         .obra-card {
@@ -1085,7 +1074,11 @@ export const HomeScreen = () => {
           border-radius: 30px;
           overflow: hidden;
           aspect-ratio: 1/1;
+          background: #e8ddd2;
           box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .obra-imagen-wrapper img {
@@ -1093,6 +1086,21 @@ export const HomeScreen = () => {
           height: 100%;
           object-fit: cover;
           transition: transform 0.6s ease;
+          opacity: 0;
+          animation: fadeIn 0.3s ease forwards;
+        }
+
+        @keyframes fadeIn {
+          to { opacity: 1; }
+        }
+
+        .obra-imagen-wrapper::before {
+          content: "✸";
+          color: #c17b5e;
+          font-size: 2rem;
+          opacity: 0.3;
+          position: absolute;
+          animation: girar 3s linear infinite;
         }
 
         .obra-card:hover .obra-imagen-wrapper img {
@@ -1109,6 +1117,7 @@ export const HomeScreen = () => {
           justify-content: center;
           opacity: 0;
           transition: opacity 0.4s ease;
+          z-index: 2;
         }
 
         .obra-card:hover .obra-overlay {
@@ -1166,7 +1175,87 @@ export const HomeScreen = () => {
           font-size: 0.85rem;
         }
 
-        /* Sobre */
+        /* TIENDA */
+        .carrito-icono {
+          background: none;
+          border: none;
+          font-size: 1.3rem;
+          cursor: pointer;
+          position: relative;
+          padding: 0.5rem;
+        }
+
+        .carrito-contador {
+          position: absolute;
+          top: 0;
+          right: 0;
+          background: #c17b5e;
+          color: white;
+          font-size: 0.7rem;
+          padding: 2px 6px;
+          border-radius: 50%;
+          min-width: 18px;
+        }
+
+        .tienda-instrucciones {
+          text-align: center;
+          color: #8b6b5c;
+          margin-bottom: 2rem;
+          font-style: italic;
+        }
+
+        .tienda-card {
+          cursor: pointer;
+        }
+
+        .tienda-overlay {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(0,0,0,0.5);
+          opacity: 0;
+          transition: opacity 0.3s;
+          z-index: 2;
+        }
+
+        .tienda-card:hover .tienda-overlay {
+          opacity: 1;
+        }
+
+        .ver-precio {
+          color: white;
+          font-size: 0.9rem;
+          letter-spacing: 1px;
+          border-bottom: 1px solid white;
+          padding-bottom: 4px;
+        }
+
+        .precio-flotante {
+          color: white;
+          text-align: center;
+        }
+
+        .precio-valor {
+          font-size: 1.3rem;
+          font-weight: 500;
+          display: block;
+          margin-bottom: 0.3rem;
+        }
+
+        .precio-segundo-clic {
+          font-size: 0.7rem;
+          opacity: 0.8;
+        }
+
+        .precio-minimo {
+          color: #c17b5e;
+          font-weight: 500;
+          margin-top: 0.3rem;
+        }
+
+        /* SOBRE */
         .sobre-section {
           padding: 5rem 0;
           background: #fdf8f3;
@@ -1233,7 +1322,7 @@ export const HomeScreen = () => {
           margin-top: 1.5rem;
         }
 
-        /* Proceso */
+        /* PROCESO */
         .proceso-section {
           padding: 5rem 0;
         }
@@ -1276,7 +1365,7 @@ export const HomeScreen = () => {
           color: #8b6b5c;
         }
 
-        /* Testimonios */
+        /* TESTIMONIOS */
         .testimonios-section {
           padding: 5rem 0;
           background: #f9eee7;
@@ -1306,7 +1395,7 @@ export const HomeScreen = () => {
           color: #8b6b5c;
         }
 
-        /* Contacto */
+        /* CONTACTO */
         .contacto-section {
           padding: 5rem 0;
         }
@@ -1356,7 +1445,7 @@ export const HomeScreen = () => {
           color: #c17b5e;
         }
 
-        /* Footer */
+        /* FOOTER */
         .footer {
           text-align: center;
           padding: 2rem;
@@ -1365,7 +1454,7 @@ export const HomeScreen = () => {
           font-size: 0.9rem;
         }
 
-        /* Fade-in Animation */
+        /* FADE */
         .fade {
           opacity: 0;
           transform: translateY(30px);
@@ -1377,7 +1466,7 @@ export const HomeScreen = () => {
           transform: translateY(0);
         }
 
-        /* Modal base */
+        /* MODALES */
         .modal-overlay {
           position: fixed;
           inset: 0;
@@ -1450,7 +1539,7 @@ export const HomeScreen = () => {
           color: #5d4a40;
         }
 
-        /* Modal de compra (formatos) */
+        /* MODAL COMPRA */
         .modal-compra {
           max-width: 1000px !important;
           padding: 2rem;
@@ -1539,85 +1628,6 @@ export const HomeScreen = () => {
           margin-top: 0.2rem;
         }
 
-        /* ===== NUEVOS ESTILOS PARA TIENDA Y CARRITO ===== */
-        .carrito-icono {
-          background: none;
-          border: none;
-          font-size: 1.3rem;
-          cursor: pointer;
-          position: relative;
-          padding: 0.5rem;
-        }
-
-        .carrito-contador {
-          position: absolute;
-          top: 0;
-          right: 0;
-          background: #c17b5e;
-          color: white;
-          font-size: 0.7rem;
-          padding: 2px 6px;
-          border-radius: 50%;
-          min-width: 18px;
-        }
-
-        .tienda-instrucciones {
-          text-align: center;
-          color: #8b6b5c;
-          margin-bottom: 2rem;
-          font-style: italic;
-        }
-
-        .tienda-card {
-          cursor: pointer;
-        }
-
-        .tienda-overlay {
-          position: absolute;
-          inset: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(0,0,0,0.5);
-          opacity: 0;
-          transition: opacity 0.3s;
-        }
-
-        .tienda-card:hover .tienda-overlay {
-          opacity: 1;
-        }
-
-        .ver-precio {
-          color: white;
-          font-size: 0.9rem;
-          letter-spacing: 1px;
-          border-bottom: 1px solid white;
-          padding-bottom: 4px;
-        }
-
-        .precio-flotante {
-          color: white;
-          text-align: center;
-        }
-
-        .precio-valor {
-          font-size: 1.3rem;
-          font-weight: 500;
-          display: block;
-          margin-bottom: 0.3rem;
-        }
-
-        .precio-segundo-clic {
-          font-size: 0.7rem;
-          opacity: 0.8;
-        }
-
-        .precio-minimo {
-          color: #c17b5e;
-          font-weight: 500;
-          margin-top: 0.3rem;
-        }
-
         .modal-agregar-btn {
           padding: 1rem;
           background: #c17b5e;
@@ -1634,7 +1644,7 @@ export const HomeScreen = () => {
           transform: translateY(-2px);
         }
 
-        /* Carrito modal */
+        /* CARRITO */
         .carrito-overlay {
           position: fixed;
           inset: 0;
@@ -1822,7 +1832,7 @@ export const HomeScreen = () => {
           background: #128C7E;
         }
 
-        /* Notificaciones */
+        /* NOTIFICACIONES */
         .notificacion {
           position: fixed;
           bottom: 2rem;
@@ -1850,7 +1860,7 @@ export const HomeScreen = () => {
           to { transform: translate(-50%, 0); opacity: 1; }
         }
 
-        /* Responsive */
+        /* RESPONSIVE */
         @media (max-width: 992px) {
           .sobre-grid {
             grid-template-columns: 1fr;
