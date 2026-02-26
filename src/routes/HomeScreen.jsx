@@ -212,6 +212,44 @@ export const HomeScreen = () => {
     ? elementosMostrados 
     : elementosMostrados.filter(el => el.categoria === categoriaSeleccionada);
 
+  // ===== FUNCIÓN DE ORDENAMIENTO PRIORIZADO =====
+  const ordenarElementos = (elementos, modo) => {
+    return elementos.slice().sort((a, b) => {
+      // 1. MURALES SIEMPRE AL FINAL (para ambos modos)
+      if (a.categoria === "Murales" && b.categoria !== "Murales") return 1;
+      if (b.categoria === "Murales" && a.categoria !== "Murales") return -1;
+      
+      // 2. MODO TIENDA: priorizar disponibilidad
+      if (modo === "tienda") {
+        const aDisponible = a.formatos ? Object.values(a.formatos).some(f => f.disponible) : false;
+        const bDisponible = b.formatos ? Object.values(b.formatos).some(f => f.disponible) : false;
+        
+        // Productos disponibles primero
+        if (aDisponible && !bDisponible) return -1;
+        if (!aDisponible && bDisponible) return 1;
+        
+        // 3. DENTRO DE DISPONIBLES: priorizar prints/digital sobre originales
+        if (aDisponible && bDisponible) {
+          const aTienePrintDigital = a.formatos?.print?.disponible || a.formatos?.digital?.disponible;
+          const bTienePrintDigital = b.formatos?.print?.disponible || b.formatos?.digital?.disponible;
+          
+          if (aTienePrintDigital && !bTienePrintDigital) return -1;
+          if (!aTienePrintDigital && bTienePrintDigital) return 1;
+        }
+      }
+      
+      // 4. MODO PORTFOLIO: ordenar por fecha (más reciente primero)
+      if (modo === "portfolio") {
+        return (b.year || "0").localeCompare(a.year || "0");
+      }
+      
+      return 0; // mantener orden original si no aplica
+    });
+  };
+
+  // Aplicar ordenamiento
+  const elementosOrdenados = ordenarElementos(elementosFiltrados, modoVista);
+
   // Intersection Observer (solo para fade-in de secciones, no para obras)
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -364,27 +402,53 @@ export const HomeScreen = () => {
 
   return (
     <div className="home-container">
-      {/* NAVBAR CON LOGO DE IMAGEN */}
-      <nav className="navbar">
+      {/* ===== NAVBAR ESPIRITUAL CON DOBLE LÍNEA DEGRADADA Y BILINGÜE ===== */}
+      <nav className="navbar-espiritual">
+        {/* Las dos líneas decorativas están en los pseudoelementos ::before y ::after */}
         <div className="nav-container">
-          <div className="brand">
+          {/* Logo y patrón espiritual */}
+          <div className="logo-container">
             <img 
               src="/img/Andrea/Logo elegante de Alekhart.png" 
               alt="AlekhArt" 
               className="brand-logo" 
             />
+            <div className="patrones-vivos">
+              <span className="figura morado"></span>
+              <span className="figura cyan"></span>
+              <span className="figura verde"></span>
+              <span className="figura azul"></span>
+            </div>
           </div>
-          <div className="nav-links">
-            <a href="#obra">Obra</a>
-            <a href="#tienda">Tienda</a>
-            <a href="#sobre">Sobre mí</a>
-            <a href="#contacto">Contacto</a>
+
+          {/* Enlaces bilingües (ES/EN) + carrito */}
+          <div className="nav-links-bilingues">
+            {/* Cada enlace tiene su versión en español (superior) e inglés (inferior) */}
+            <a href="#obra" className="bilingue-item">
+              <span className="lang-es">Obra</span>
+              <span className="lang-en">Work</span>
+            </a>
+            <a href="#tienda" className="bilingue-item">
+              <span className="lang-es">Tienda</span>
+              <span className="lang-en">Shop</span>
+            </a>
+            <a href="#sobre" className="bilingue-item">
+              <span className="lang-es">Sobre mí</span>
+              <span className="lang-en">About</span>
+            </a>
+            <a href="#contacto" className="bilingue-item">
+              <span className="lang-es">Contacto</span>
+              <span className="lang-en">Contact</span>
+            </a>
+            
+            {/* Carrito con contador */}
             <button 
-              className="carrito-icono"
+              className="carrito-icono bilingue-item"
               onClick={() => setMostrarCarrito(true)}
-              aria-label="Carrito"
+              aria-label="Carrito / Cart"
             >
-              🛒
+              <span className="lang-es">🛒 Carrito</span>
+              <span className="lang-en">🛒 Cart</span>
               {carrito.length > 0 && (
                 <span className="carrito-contador">
                   {carrito.reduce((sum, item) => sum + item.cantidad, 0)}
@@ -466,7 +530,7 @@ export const HomeScreen = () => {
         </div>
       </section>
 
-      {/* GALERÍA / TIENDA */}
+      {/* GALERÍA / TIENDA CON ORDENAMIENTO PRIORIZADO */}
       <section id={modoVista === 'portfolio' ? "obra" : "tienda"} className="galeria-section">
         <div className="container">
           <h2 className="section-titulo text-center">
@@ -474,82 +538,120 @@ export const HomeScreen = () => {
           </h2>
           
           {modoVista === 'tienda' && (
-            <p className="tienda-instrucciones">
-              👆 Clic en la imagen para ver precio · Segundo clic para elegir formato
-            </p>
+            <>
+              <p className="tienda-instrucciones">
+                👆 Clic en la imagen para ver precio · Segundo clic para elegir formato
+              </p>
+              {/* Indicador visual de prioridad */}
+              <div className="prioridad-indicador">
+                <span className="prioridad-badge prioridad-alta">⚡ Disponible ahora</span>
+                <span className="prioridad-badge prioridad-media">📦 A pedido</span>
+                <span className="prioridad-badge prioridad-baja">🎨 Murales</span>
+              </div>
+            </>
           )}
           
           <div className="galeria-grid">
-            {elementosFiltrados.map((elemento, index) => (
-              <div 
-                key={elemento.id} 
-                className={`obra-card ${index % 3 === 1 ? "obra-card-offset" : ""} ${modoVista === 'tienda' ? 'tienda-card' : ''}`}
-                onClick={() => {
-                  if (modoVista === 'portfolio') {
-                    setImagenSeleccionada(elemento);
-                  } else {
-                    handleProductClick(elemento, event);
-                  }
-                }}
-              >
-                <div className="obra-imagen-wrapper">
-                  <img 
-                    src={elemento.imagen} 
-                    alt={elemento.titulo} 
-                    loading="lazy"
-                    onLoad={(e) => {
-                      e.target.style.opacity = '1';
-                    }}
-                  />
+            {elementosOrdenados.map((elemento, index) => {
+              // Determinar badge de prioridad para tienda
+              const prioridad = modoVista === "tienda" ? (
+                elemento.categoria === "Murales" ? "baja" :
+                (elemento.formatos?.print?.disponible || elemento.formatos?.digital?.disponible) ? "alta" :
+                elemento.formatos?.original?.disponible ? "media" : "vendido"
+              ) : null;
+              
+              return (
+                <div 
+                  key={elemento.id} 
+                  className={`obra-card ${index % 3 === 1 ? "obra-card-offset" : ""} 
+                    ${modoVista === 'tienda' ? 'tienda-card' : ''}
+                    ${prioridad ? `prioridad-${prioridad}` : ''}`}
+                  onClick={() => {
+                    if (modoVista === 'portfolio') {
+                      setImagenSeleccionada(elemento);
+                    } else {
+                      handleProductClick(elemento, event);
+                    }
+                  }}
+                >
+                  <div className="obra-imagen-wrapper">
+                    <img 
+                      src={elemento.imagen} 
+                      alt={elemento.titulo} 
+                      loading="lazy"
+                      onLoad={(e) => {
+                        e.target.style.opacity = '1';
+                      }}
+                    />
+                    
+                    {/* Badge de prioridad visual */}
+                    {modoVista === 'tienda' && prioridad && prioridad !== 'vendido' && (
+                      <div className={`prioridad-chip prioridad-${prioridad}`}>
+                        {prioridad === 'alta' && '⚡ Disponible'}
+                        {prioridad === 'media' && '📦 A pedido'}
+                        {prioridad === 'baja' && '🎨 Mural'}
+                      </div>
+                    )}
+                    
+                    {modoVista === 'portfolio' && (
+                      <div className="obra-overlay">
+                        <span>Ver más</span>
+                      </div>
+                    )}
+                    
+                    {modoVista === 'tienda' && (
+                      <div className="tienda-overlay">
+                        {!Object.values(elemento.formatos).some(f => f.disponible) ? (
+                          <span className="badge-vendido">Vendida</span>
+                        ) : productosConPrecioVisible[elemento.id] ? (
+                          <div className="precio-flotante">
+                            <span className="precio-valor">
+                              Desde {formatearPrecio(Math.min(
+                                ...Object.values(elemento.formatos)
+                                  .filter(f => f.disponible)
+                                  .map(f => f.precio)
+                              ))}
+                            </span>
+                            <span className="precio-segundo-clic">clic para elegir</span>
+                          </div>
+                        ) : (
+                          <span className="ver-precio">clic para ver precio</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
                   
-                  {modoVista === 'portfolio' && (
-                    <div className="obra-overlay">
-                      <span>Ver más</span>
-                    </div>
-                  )}
-                  
-                  {modoVista === 'tienda' && (
-                    <div className="tienda-overlay">
-                      {!Object.values(elemento.formatos).some(f => f.disponible) ? (
-                        <span className="badge-vendido">Vendida</span>
-                      ) : productosConPrecioVisible[elemento.id] ? (
-                        <div className="precio-flotante">
-                          <span className="precio-valor">
-                            Desde {formatearPrecio(Math.min(
+                  <div className="obra-info">
+                    <h3>{elemento.titulo}</h3>
+                    <p>{elemento.categoria}</p>
+                    {modoVista === 'portfolio' ? (
+                      <p className="obra-tecnica">{elemento.tecnica} · {elemento.year}</p>
+                    ) : (
+                      <>
+                        <p className="obra-tecnica">{elemento.tecnica} · {elemento.year}</p>
+                        <p className="precio-minimo">
+                          {!Object.values(elemento.formatos).some(f => f.disponible) ? (
+                            <span className="no-disponible">No disponible</span>
+                          ) : (
+                            <>Desde {formatearPrecio(Math.min(
                               ...Object.values(elemento.formatos)
                                 .filter(f => f.disponible)
                                 .map(f => f.precio)
-                            ))}
-                          </span>
-                          <span className="precio-segundo-clic">clic para elegir</span>
-                        </div>
-                      ) : (
-                        <span className="ver-precio">clic para ver precio</span>
-                      )}
-                    </div>
-                  )}
+                            ))}</>
+                          )}
+                        </p>
+                        {/* Micro-badge de tipo */}
+                        <p className="tipo-entrega">
+                          {elemento.formatos?.digital?.disponible && '📱 Digital · '}
+                          {elemento.formatos?.print?.disponible && '🖨️ Print · '}
+                          {elemento.formatos?.original?.disponible && '🎨 Original'}
+                        </p>
+                      </>
+                    )}
+                  </div>
                 </div>
-                
-                <div className="obra-info">
-                  <h3>{elemento.titulo}</h3>
-                  <p>{elemento.categoria}</p>
-                  {modoVista === 'portfolio' ? (
-                    <p className="obra-tecnica">{elemento.tecnica} · {elemento.year}</p>
-                  ) : (
-                    <>
-                      <p className="obra-tecnica">{elemento.tecnica} · {elemento.year}</p>
-                      <p className="precio-minimo">
-                        Desde {formatearPrecio(Math.min(
-                          ...Object.values(elemento.formatos)
-                            .filter(f => f.disponible)
-                            .map(f => f.precio)
-                        ))}
-                      </p>
-                    </>
-                  )}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -797,1177 +899,345 @@ export const HomeScreen = () => {
         </div>
       )}
 
-      {/* ESTILOS - SIN jsx */}
+      {/* ESTILOS DEL NUEVO NAVBAR (se agregan a los existentes) */}
       <style>{`
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-
-        body {
-          font-family: 'Cormorant Garamond', 'Georgia', serif;
-          background-color: #fdf8f3;
-          color: #3a2a24;
-          line-height: 1.6;
-          overflow-x: hidden;
-        }
-
-        .home-container {
-          min-height: 100vh;
-        }
-
-        /* NAVBAR CON LOGO */
-        .navbar {
+        /* ===== NAVBAR ESPIRITUAL CON DOBLE LÍNEA DEGRADADA ===== */
+        .navbar-espiritual {
           position: fixed;
           top: 0;
           width: 100%;
-          background: rgba(253, 248, 243, 0.95);
-          backdrop-filter: blur(10px);
-          padding: 1rem 0;
+          background: rgba(18, 14, 28, 0.85);
+          backdrop-filter: blur(16px);
+          padding: 0.6rem 2rem;
           z-index: 1000;
-          border-bottom: 1px solid rgba(193, 123, 94, 0.1);
+          border-bottom: none;
+          box-shadow: 0 8px 32px rgba(80, 40, 120, 0.3);
+          
+          /* Línea superior (degradada de arriba a abajo) */
+          &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to bottom, 
+              #b388ff,      /* violeta/morado */
+              #22d3ee,      /* cyan */
+              #4ade80,      /* verde eléctrico */
+              #3b82f6,      /* azul */
+              transparent   /* se desvanece hacia abajo */
+            );
+            background-size: 100% 400%;
+            background-position: top;
+            pointer-events: none;
+            z-index: 1001;
+            opacity: 0.9;
+          }
+          
+          /* Línea inferior (degradada de arriba a abajo) */
+          &::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to bottom, 
+              #c77dff,      /* morado más intenso */
+              #2dd4bf,      /* verde-cyan */
+              #60e080,      /* verde eléctrico claro */
+              #4895ff,      /* azul eléctrico */
+              transparent   /* se desvanece hacia abajo */
+            );
+            background-size: 100% 400%;
+            background-position: top;
+            pointer-events: none;
+            z-index: 1001;
+            opacity: 0.9;
+          }
         }
 
-        .nav-container {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 2rem;
+        /* Ajustes del contenedor del navbar */
+        .navbar-espiritual .nav-container {
           display: flex;
+          align-items: center;
           justify-content: space-between;
-          align-items: center;
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0;
+          position: relative;
+          z-index: 1002;
         }
 
-        .brand {
+        /* Logo + patrones */
+        .logo-container {
           display: flex;
           align-items: center;
+          gap: 1.5rem;
         }
 
-        .brand-logo {
-          height: 50px;
-          width: auto;
-          display: block;
-          object-fit: contain;
-        }
-
-        .nav-links {
+        .patrones-vivos {
           display: flex;
-          gap: 2rem;
+          gap: 0.5rem;
           align-items: center;
         }
 
-        .nav-links a {
-          color: #3a2a24;
+        .figura {
+          width: 28px;
+          height: 28px;
+          border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+          animation: formaFlotante 6s infinite alternate ease-in-out;
+          filter: blur(0.8px) brightness(1.3);
+          box-shadow: 0 0 12px currentColor;
+        }
+
+        .figura.morado {
+          background: linear-gradient(145deg, #b388ff, #9d65ff);
+          color: #b388ff;
+        }
+        .figura.cyan {
+          background: linear-gradient(145deg, #22d3ee, #0aa5c0);
+          color: #22d3ee;
+        }
+        .figura.verde {
+          background: linear-gradient(145deg, #4ade80, #1fa750);
+          color: #4ade80;
+        }
+        .figura.azul {
+          background: linear-gradient(145deg, #3b82f6, #1e5bbf);
+          color: #3b82f6;
+        }
+
+        @keyframes formaFlotante {
+          0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; transform: rotate(0deg); }
+          100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: rotate(10deg); }
+        }
+
+        /* Enlaces bilingües */
+        .nav-links-bilingues {
+          display: flex;
+          align-items: center;
+          gap: 1.8rem;
+        }
+
+        .bilingue-item {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
           text-decoration: none;
-          font-size: 0.9rem;
-          letter-spacing: 1px;
-          transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-          color: #c17b5e;
-        }
-
-        @keyframes girar {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-
-        /* HERO */
-        .hero {
-          min-height: 100vh;
-          display: flex;
-          align-items: center;
-          position: relative;
-          background: linear-gradient(135deg, #fdf8f3 0%, #f9eee7 100%);
-          padding: 80px 2rem 2rem;
-        }
-
-        .hero-fondo {
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(circle at 20% 30%, rgba(210, 150, 120, 0.1) 0%, transparent 30%),
-                      radial-gradient(circle at 80% 70%, rgba(180, 120, 90, 0.1) 0%, transparent 40%);
-          pointer-events: none;
-        }
-
-        .hero-content {
-          position: relative;
-          text-align: center;
-          max-width: 800px;
-          margin: 0 auto;
-        }
-
-        .mandala-icon {
-          font-size: 2rem;
-          color: #c17b5e;
-          margin-bottom: 1rem;
-          animation: girar 20s linear infinite;
-        }
-
-        .hero-titulo {
-          font-size: clamp(2.5rem, 8vw, 5rem);
-          font-weight: 300;
-          color: #3a2a24;
-          line-height: 1.1;
-        }
-
-        .hero-apellido {
-          font-weight: 500;
-          color: #c17b5e;
-          display: block;
-          font-size: clamp(2rem, 7vw, 4rem);
-        }
-
-        .hero-line {
-          width: 80px;
-          height: 1px;
-          background: #c17b5e;
-          margin: 1.2rem auto;
-          opacity: 0.5;
-        }
-
-        .hero-subtitulo {
-          font-size: clamp(0.9rem, 3.5vw, 1.3rem);
-          letter-spacing: 3px;
-          color: #8b6b5c;
-          margin-bottom: 1.2rem;
-          text-transform: uppercase;
-        }
-
-        .hero-frase {
-          font-size: clamp(1.2rem, 5vw, 1.8rem);
-          font-style: italic;
-          color: #5d4a40;
-          margin-bottom: 1.8rem;
-        }
-
-        .hero-badges {
-          display: flex;
-          justify-content: center;
-          gap: 0.8rem;
-          margin-bottom: 2rem;
-          flex-wrap: wrap;
-        }
-
-        .hero-badges span {
-          padding: 0.4rem 1.2rem;
-          border: 1px solid #d4b2a0;
-          border-radius: 40px;
-          color: #5d4a40;
-          font-size: 0.85rem;
-          letter-spacing: 1px;
-          background: rgba(255,255,255,0.3);
-          backdrop-filter: blur(5px);
-        }
-
-        .container {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 2rem;
-        }
-
-        .section-titulo {
-          font-size: 2.5rem;
-          font-weight: 300;
-          color: #3a2a24;
-          margin-bottom: 2rem;
-        }
-
-        .text-center {
-          text-align: center;
-        }
-
-        /* VISTA SELECTOR */
-        .vista-selector {
-          padding: 2rem 0 1rem;
-          margin-top: 0.5rem;
-        }
-
-        .vista-wrapper {
-          display: flex;
-          justify-content: center;
-          gap: 1rem;
-        }
-
-        .vista-btn {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          padding: 0.8rem 2rem;
-          background: none;
-          border: 1px solid #d4b2a0;
-          border-radius: 50px;
-          color: #8b6b5c;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          font-size: 1rem;
-        }
-
-        .vista-btn.activo {
-          background: #c17b5e;
-          border-color: #c17b5e;
-          color: white;
-        }
-
-        .vista-icono {
-          font-size: 1.2rem;
-        }
-
-        /* FILTROS */
-        .filtros-section {
-          padding: 2rem 0;
-        }
-
-        .filtros-wrapper {
-          display: flex;
-          justify-content: center;
-          gap: 0.5rem;
-          flex-wrap: wrap;
-        }
-
-        .filtro-btn {
-          background: none;
-          border: 1px solid transparent;
-          padding: 0.5rem 1.5rem;
-          font-size: 0.9rem;
-          color: #8b6b5c;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          border-radius: 40px;
-          font-family: 'Montserrat', sans-serif;
-          letter-spacing: 1px;
-        }
-
-        .filtro-btn:hover {
-          color: #c17b5e;
-          border-color: #c17b5e;
-        }
-
-        .filtro-btn.activo {
-          background: #f9eee7;
-          color: #c17b5e;
-          border-color: #c17b5e;
-        }
-
-        /* GALERÍA */
-        .galeria-section {
-          padding: 1rem 0 4rem;
-          min-height: 600px;
-        }
-
-        .galeria-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-          gap: 2.5rem;
-          min-height: 400px;
-        }
-
-        .obra-card {
-          cursor: pointer;
-          transition: all 0.4s ease;
-        }
-
-        .obra-card:hover {
-          transform: translateY(-10px);
-        }
-
-        .obra-card-offset {
-          margin-top: 2rem;
-        }
-
-        .obra-imagen-wrapper {
-          position: relative;
-          border-radius: 30px;
-          overflow: hidden;
-          aspect-ratio: 1/1;
-          background: #e8ddd2;
-          box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .obra-imagen-wrapper img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.6s ease;
-          opacity: 0;
-          animation: fadeIn 0.3s ease forwards;
-        }
-
-        @keyframes fadeIn {
-          to { opacity: 1; }
-        }
-
-        .obra-imagen-wrapper::before {
-          content: "✸";
-          color: #c17b5e;
-          font-size: 2rem;
-          opacity: 0.3;
-          position: absolute;
-          animation: girar 3s linear infinite;
-        }
-
-        .obra-card:hover .obra-imagen-wrapper img {
-          transform: scale(1.08);
-        }
-
-        .obra-overlay {
-          position: absolute;
-          inset: 0;
-          background: rgba(193, 123, 94, 0.2);
-          backdrop-filter: blur(2px);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          opacity: 0;
-          transition: opacity 0.4s ease;
-          z-index: 2;
-        }
-
-        .obra-card:hover .obra-overlay {
-          opacity: 1;
-        }
-
-        .obra-overlay span {
-          color: white;
-          font-size: 1rem;
-          letter-spacing: 2px;
-          border-bottom: 1px solid white;
-          padding-bottom: 5px;
-        }
-
-        .badge-vendido,
-        .badge-disponible {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          padding: 0.3rem 1rem;
-          border-radius: 20px;
-          font-size: 0.8rem;
-          font-weight: 500;
-          z-index: 2;
-        }
-
-        .badge-vendido {
-          background: #c17b5e;
-          color: white;
-        }
-
-        .badge-disponible {
-          background: #4a7c59;
-          color: white;
-        }
-
-        .obra-info {
-          text-align: center;
-          margin-top: 1.2rem;
-        }
-
-        .obra-info h3 {
-          font-size: 1.3rem;
-          color: #3a2a24;
-          margin-bottom: 0.3rem;
-        }
-
-        .obra-info p {
-          color: #8b6b5c;
-          font-size: 0.9rem;
-        }
-
-        .obra-tecnica {
-          color: #c17b5e !important;
-          font-size: 0.85rem;
-        }
-
-        /* TIENDA */
-        .carrito-icono {
           background: none;
           border: none;
-          font-size: 1.3rem;
           cursor: pointer;
+          padding: 0.2rem 0;
+          transition: all 0.2s;
+          border-bottom: 1px solid transparent;
+        }
+
+        .bilingue-item:hover {
+          border-bottom-color: #c084fc;
+        }
+
+        .lang-es {
+          font-size: 1rem;
+          font-weight: 500;
+          color: #f0eaff;
+          letter-spacing: 0.5px;
+          text-shadow: 0 0 8px #a78bfa;
+          line-height: 1.2;
+        }
+
+        .lang-en {
+          font-size: 0.75rem;
+          color: #b0e0ff;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          opacity: 0.8;
+          text-shadow: 0 0 5px #4ade80;
+        }
+
+        /* Carrito dentro del navbar bilingüe */
+        .carrito-icono {
+          background: rgba(120, 80, 200, 0.2);
+          border: 1px solid rgba(130, 90, 255, 0.5);
+          border-radius: 2rem;
+          padding: 0.3rem 1rem !important;
           position: relative;
-          padding: 0.5rem;
+        }
+
+        .carrito-icono .lang-es,
+        .carrito-icono .lang-en {
+          display: block;
+          text-align: left;
         }
 
         .carrito-contador {
           position: absolute;
-          top: 0;
-          right: 0;
-          background: #c17b5e;
-          color: white;
+          top: -6px;
+          right: -6px;
+          background: #4ade80;
+          color: #0b0a1a;
           font-size: 0.7rem;
+          font-weight: bold;
           padding: 2px 6px;
-          border-radius: 50%;
-          min-width: 18px;
-        }
-
-        .tienda-instrucciones {
+          border-radius: 40%;
+          min-width: 20px;
           text-align: center;
-          color: #8b6b5c;
-          margin-bottom: 2rem;
-          font-style: italic;
+          box-shadow: 0 0 10px #22d3ee;
         }
 
-        .tienda-card {
-          cursor: pointer;
-        }
-
-        .tienda-overlay {
-          position: absolute;
-          inset: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(0,0,0,0.5);
-          opacity: 0;
-          transition: opacity 0.3s;
-          z-index: 2;
-        }
-
-        .tienda-card:hover .tienda-overlay {
-          opacity: 1;
-        }
-
-        .ver-precio {
-          color: white;
-          font-size: 0.9rem;
-          letter-spacing: 1px;
-          border-bottom: 1px solid white;
-          padding-bottom: 4px;
-        }
-
-        .precio-flotante {
-          color: white;
-          text-align: center;
-        }
-
-        .precio-valor {
-          font-size: 1.3rem;
-          font-weight: 500;
-          display: block;
-          margin-bottom: 0.3rem;
-        }
-
-        .precio-segundo-clic {
-          font-size: 0.7rem;
-          opacity: 0.8;
-        }
-
-        .precio-minimo {
-          color: #c17b5e;
-          font-weight: 500;
-          margin-top: 0.3rem;
-        }
-
-        /* SOBRE */
-        .sobre-section {
-          padding: 5rem 0;
-          background: #fdf8f3;
-        }
-
-        .sobre-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 4rem;
-          align-items: center;
-        }
-
-        .sobre-imagen {
-          position: relative;
-          border-radius: 30px;
-          overflow: hidden;
-          box-shadow: 0 25px 45px rgba(0,0,0,0.15);
-        }
-
-        .sobre-imagen img {
-          width: 100%;
-          height: auto;
-          display: block;
-        }
-
-        .sobre-mandala {
-          position: absolute;
-          bottom: -20px;
-          right: -20px;
-          width: 80px;
-          height: 80px;
-          background: rgba(193, 123, 94, 0.1);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 2rem;
-          color: #c17b5e;
-          animation: girar 25s linear infinite;
-        }
-
-        .sobre-linea {
-          width: 60px;
-          height: 2px;
-          background: #c17b5e;
-          margin-bottom: 1.5rem;
-        }
-
-        .sobre-texto-grande {
-          font-size: 1.4rem;
-          font-style: italic;
-          color: #5d4a40;
-          margin-bottom: 1.2rem;
-        }
-
-        .sobre-texto {
-          color: #8b6b5c;
-          margin-bottom: 1.2rem;
-        }
-
-        .sobre-firma {
-          font-size: 1.8rem;
-          color: #c17b5e;
-          margin-top: 1.5rem;
-        }
-
-        /* PROCESO */
-        .proceso-section {
-          padding: 5rem 0;
-        }
-
-        .proceso-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 2rem;
-          margin-top: 2rem;
-        }
-
-        .proceso-card {
-          padding: 2rem;
-          background: #fdf8f3;
-          border-radius: 30px;
-          text-align: center;
-          transition: all 0.3s ease;
-        }
-
-        .proceso-card:hover {
-          transform: translateY(-10px);
-          box-shadow: 0 15px 35px rgba(193, 123, 94, 0.1);
-        }
-
-        .proceso-numero {
-          font-size: 2.5rem;
-          color: #c17b5e;
-          opacity: 0.3;
-          font-weight: 300;
-          margin-bottom: 1rem;
-        }
-
-        .proceso-card h3 {
-          font-size: 1.5rem;
-          margin-bottom: 1rem;
-          color: #3a2a24;
-        }
-
-        .proceso-card p {
-          color: #8b6b5c;
-        }
-
-        /* TESTIMONIOS */
-        .testimonios-section {
-          padding: 5rem 0;
-          background: #f9eee7;
-        }
-
-        .testimonio-contenido {
-          max-width: 800px;
-          margin: 0 auto;
-          text-align: center;
-        }
-
-        .testimonio-icono {
-          font-size: 3rem;
-          color: #c17b5e;
-          opacity: 0.5;
-          margin-bottom: 1rem;
-        }
-
-        .testimonio-texto {
-          font-size: 1.4rem;
-          font-style: italic;
-          color: #3a2a24;
-          margin-bottom: 1.5rem;
-        }
-
-        .testimonio-autor {
-          color: #8b6b5c;
-        }
-
-        /* CONTACTO */
-        .contacto-section {
-          padding: 5rem 0;
-        }
-
-        .contacto-contenido {
-          text-align: center;
-          max-width: 600px;
-          margin: 0 auto;
-        }
-
-        .contacto-contenido p {
-          font-size: 1.1rem;
-          color: #8b6b5c;
-          margin-bottom: 2rem;
-        }
-
-        .contacto-boton {
-          display: inline-block;
-          padding: 1rem 2.5rem;
-          background: #c17b5e;
-          color: white;
-          text-decoration: none;
-          border-radius: 50px;
-          margin-bottom: 2rem;
-          transition: all 0.3s ease;
-        }
-
-        .contacto-boton:hover {
-          background: #a5674c;
-          transform: translateY(-3px);
-          box-shadow: 0 10px 25px rgba(193, 123, 94, 0.3);
-        }
-
-        .contacto-redes {
-          display: flex;
-          justify-content: center;
-          gap: 1.5rem;
-        }
-
-        .contacto-redes a {
-          color: #8b6b5c;
-          text-decoration: none;
-          transition: color 0.3s ease;
-        }
-
-        .contacto-redes a:hover {
-          color: #c17b5e;
-        }
-
-        /* FOOTER */
-        .footer {
-          text-align: center;
-          padding: 2rem;
-          border-top: 1px solid rgba(193, 123, 94, 0.1);
-          color: #8b6b5c;
-          font-size: 0.9rem;
-        }
-
-        /* FADE */
-        .fade {
-          opacity: 0;
-          transform: translateY(30px);
-          transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .fade.visible {
-          opacity: 1;
-          transform: translateY(0);
-        }
-
-        /* MODALES */
-        .modal-overlay {
-          position: fixed;
-          inset: 0;
-          background: rgba(0, 0, 0, 0.95);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          z-index: 1000;
-          padding: 1rem;
-          overflow-y: auto;
-        }
-
-        .modal-contenido {
-          background: #fdf8f3;
-          border-radius: 30px;
-          max-width: 95vw;
-          max-height: 90vh;
-          overflow: auto;
-          position: relative;
-          padding: 2rem;
-        }
-
-        .modal-cerrar {
-          position: absolute;
-          top: 0.5rem;
-          right: 0.5rem;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background: #c17b5e;
-          color: white;
-          border: none;
-          font-size: 1.5rem;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          z-index: 10;
-        }
-
-        .modal-cerrar:hover {
-          transform: scale(1.1);
-        }
-
-        .modal-contenido img {
-          width: 100%;
-          max-height: 50vh;
-          object-fit: contain;
-          border-radius: 20px;
-          margin-bottom: 1rem;
-        }
-
-        .modal-info h3 {
-          font-size: 1.5rem;
-          color: #3a2a24;
-          margin-bottom: 0.3rem;
-        }
-
-        .modal-categoria {
-          color: #c17b5e;
-          margin-bottom: 0.3rem;
-        }
-
-        .modal-tecnica {
-          color: #8b6b5c;
-          font-style: italic;
-          font-size: 0.9rem;
-          margin-bottom: 0.5rem;
-        }
-
-        .modal-descripcion {
-          color: #5d4a40;
-        }
-
-        /* MODAL COMPRA */
-        .modal-compra {
-          max-width: 1000px !important;
-          padding: 2rem;
-        }
-
-        .modal-compra-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 2rem;
-        }
-
-        .modal-compra-imagen img {
-          width: 100%;
-          height: auto;
-          border-radius: 20px;
-        }
-
-        .modal-compra-info {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .modal-compra-info h2 {
-          font-size: 2rem;
-          color: #3a2a24;
-          margin-bottom: 0.5rem;
-        }
-
-        .formatos-selector {
-          margin: 2rem 0;
-        }
-
-        .formatos-selector h3 {
-          font-size: 1.2rem;
-          color: #8b6b5c;
-          margin-bottom: 1rem;
-        }
-
-        .formato-opcion {
-          display: flex;
-          align-items: center;
-          padding: 1rem;
-          margin-bottom: 0.8rem;
-          border: 1px solid #d4b2a0;
-          border-radius: 15px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .formato-opcion.seleccionado {
-          border-color: #c17b5e;
-          background: rgba(193, 123, 94, 0.05);
-          box-shadow: 0 5px 15px rgba(193, 123, 94, 0.1);
-        }
-
-        .formato-opcion input[type="radio"] {
-          margin-right: 1rem;
-          accent-color: #c17b5e;
-          width: 18px;
-          height: 18px;
-        }
-
-        .formato-info {
-          flex: 1;
-          display: grid;
-          grid-template-columns: 100px 1fr;
-          gap: 0.5rem;
-          align-items: center;
-        }
-
-        .formato-nombre {
-          font-weight: 600;
-          color: #3a2a24;
-        }
-
-        .formato-precio {
-          font-size: 1.1rem;
-          color: #c17b5e;
-          font-weight: 500;
-        }
-
-        .formato-descripcion {
-          grid-column: 1 / -1;
-          color: #8b6b5c;
-          font-size: 0.9rem;
-          margin-top: 0.2rem;
-        }
-
-        .modal-agregar-btn {
-          padding: 1rem;
-          background: #c17b5e;
-          color: white;
-          border: none;
-          border-radius: 50px;
-          font-size: 1.1rem;
-          cursor: pointer;
-          transition: all 0.3s;
-        }
-
-        .modal-agregar-btn:hover {
-          background: #a5674c;
-          transform: translateY(-2px);
-        }
-
-        /* CARRITO */
-        .carrito-overlay {
-          position: fixed;
-          inset: 0;
-          background: rgba(0,0,0,0.5);
-          display: flex;
-          justify-content: flex-end;
-          z-index: 2000;
-        }
-
-        .carrito-modal {
-          width: 100%;
-          max-width: 450px;
-          background: #fdf8f3;
-          height: 100%;
-          overflow-y: auto;
-          padding: 2rem;
-          animation: slideLeft 0.3s;
-        }
-
-        @keyframes slideLeft {
-          from { transform: translateX(100%); }
-          to { transform: translateX(0); }
-        }
-
-        .carrito-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 2rem;
-        }
-
-        .carrito-cerrar {
-          background: none;
-          border: none;
-          font-size: 2rem;
-          cursor: pointer;
-          color: #8b6b5c;
-        }
-
-        .carrito-vacio {
-          text-align: center;
-          padding: 3rem 0;
-        }
-
-        .carrito-vacio p {
-          color: #8b6b5c;
-          margin-bottom: 1.5rem;
-        }
-
-        .carrito-seguir-comprando {
-          padding: 0.8rem 2rem;
-          background: #c17b5e;
-          color: white;
-          border: none;
-          border-radius: 50px;
-          cursor: pointer;
-        }
-
-        .carrito-items {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-          margin-bottom: 2rem;
-        }
-
-        .carrito-item {
-          display: flex;
-          gap: 1rem;
-          padding: 1rem;
-          background: white;
-          border-radius: 15px;
-          position: relative;
-        }
-
-        .carrito-item img {
-          width: 80px;
-          height: 80px;
-          border-radius: 10px;
-          object-fit: cover;
-        }
-
-        .carrito-item-info {
-          flex: 1;
-        }
-
-        .carrito-item-info h4 {
-          font-size: 1rem;
-          margin-bottom: 0.2rem;
-          color: #3a2a24;
-        }
-
-        .carrito-item-formato {
-          color: #8b6b5c;
-          font-size: 0.8rem;
-          margin-bottom: 0.2rem;
-        }
-
-        .carrito-item-precio {
-          color: #c17b5e;
-          font-weight: 500;
-          margin-bottom: 0.5rem;
-        }
-
-        .carrito-item-cantidad {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-
-        .cantidad-btn {
-          width: 25px;
-          height: 25px;
-          border-radius: 50%;
-          border: 1px solid #d4b2a0;
-          background: none;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .cantidad-btn:hover {
-          background: #f5efe8;
-        }
-
-        .carrito-eliminar-item {
-          position: absolute;
-          top: 0.5rem;
-          right: 0.5rem;
-          background: none;
-          border: none;
-          font-size: 1.2rem;
-          color: #8b6b5c;
-          cursor: pointer;
-        }
-
-        .carrito-footer {
-          border-top: 1px solid #e8e0d5;
-          padding-top: 1.5rem;
-        }
-
-        .carrito-total {
-          display: flex;
-          justify-content: space-between;
-          font-size: 1.2rem;
-          margin-bottom: 1.5rem;
-        }
-
-        .carrito-total strong {
-          color: #c17b5e;
-        }
-
-        .carrito-acciones {
-          display: flex;
-          gap: 1rem;
-        }
-
-        .carrito-vaciar {
-          flex: 1;
-          padding: 0.8rem;
-          background: none;
-          border: 1px solid #c17b5e;
-          border-radius: 50px;
-          color: #c17b5e;
-          cursor: pointer;
-          transition: all 0.3s;
-        }
-
-        .carrito-vaciar:hover {
-          background: rgba(193, 123, 94, 0.1);
-        }
-
-        .carrito-whatsapp {
-          flex: 2;
-          padding: 0.8rem;
-          background: #25D366;
-          color: white;
-          border: none;
-          border-radius: 50px;
-          cursor: pointer;
-          transition: all 0.3s;
-        }
-
-        .carrito-whatsapp:hover {
-          background: #128C7E;
-        }
-
-        /* NOTIFICACIONES */
-        .notificacion {
-          position: fixed;
-          bottom: 2rem;
-          left: 50%;
-          transform: translateX(-50%);
-          padding: 1rem 2rem;
-          border-radius: 50px;
-          color: white;
-          font-size: 0.9rem;
-          z-index: 3000;
-          animation: slideUp 0.3s;
-          box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .notificacion.success {
-          background: #4a7c59;
-        }
-
-        .notificacion.error {
-          background: #c17b5e;
-        }
-
-        @keyframes slideUp {
-          from { transform: translate(-50%, 100%); opacity: 0; }
-          to { transform: translate(-50%, 0); opacity: 1; }
-        }
-
-        /* RESPONSIVE */
+        /* Responsive del navbar */
         @media (max-width: 992px) {
-          .sobre-grid {
-            grid-template-columns: 1fr;
-            gap: 2rem;
+          .navbar-espiritual {
+            padding: 0.6rem 1rem;
           }
-
-          .sobre-contenido {
-            text-align: center;
+          
+          .patrones-vivos {
+            display: none;
           }
-
-          .sobre-linea {
-            margin: 1.5rem auto;
+          
+          .nav-links-bilingues {
+            gap: 0.8rem;
           }
-
-          .modal-compra-grid {
-            grid-template-columns: 1fr;
+          
+          .bilingue-item .lang-es {
+            font-size: 0.9rem;
+          }
+          
+          .bilingue-item .lang-en {
+            font-size: 0.65rem;
           }
         }
 
         @media (max-width: 768px) {
-          .navbar {
-            padding: 0.8rem 1rem;
+          .navbar-espiritual .nav-container {
+            flex-direction: column;
+            gap: 0.5rem;
           }
           
-          .brand-logo {
-            height: 35px;
-          }
-          
-          .nav-links {
-            display: flex;
-            gap: 1rem;
-          }
-          
-          .nav-links a {
-            display: none;
-          }
-          
-          .nav-links a:last-child {
-            display: flex;
+          .nav-links-bilingues {
+            flex-wrap: wrap;
+            justify-content: center;
           }
           
           .carrito-icono {
-            display: flex;
-          }
-
-          .vista-wrapper {
-            flex-direction: column;
-            align-items: center;
-          }
-
-          .vista-btn {
-            width: 200px;
-            justify-content: center;
-          }
-
-          .obra-card-offset {
-            margin-top: 0;
-          }
-
-          .galeria-grid {
-            gap: 1.5rem;
-          }
-
-          .proceso-grid {
-            gap: 1rem;
-          }
-
-          .testimonio-texto {
-            font-size: 1.2rem;
-          }
-
-          .formato-info {
-            grid-template-columns: 1fr;
-          }
-
-          .carrito-acciones {
-            flex-direction: column;
+            padding: 0.2rem 0.8rem !important;
           }
         }
 
-        @media (max-width: 480px) {
-          .hero-titulo {
-            font-size: 2.2rem;
-          }
+        /* Ajuste para que el hero no quede detrás del navbar fijo */
+        .hero {
+          margin-top: 70px; /* altura aprox del navbar */
+        }
 
-          .hero-apellido {
-            font-size: 1.8rem;
+        @media (max-width: 768px) {
+          .hero {
+            margin-top: 100px;
           }
+        }
 
-          .section-titulo {
-            font-size: 2rem;
-          }
+        /* Los estilos anteriores del navbar se reemplazan, pero mantenemos los demás */
+        .navbar {
+          display: none; /* Ocultamos el navbar anterior */
+        }
 
-          .galeria-grid {
-            grid-template-columns: 1fr;
-          }
-          
-          .brand-logo {
-            height: 30px;
-          }
+        /* Aseguramos que el brand-logo se vea bien */
+        .brand-logo {
+          height: 48px;
+          width: auto;
+          filter: drop-shadow(0 0 6px #a78bfa);
+        }
+
+        /* Prioridad visual para tienda */
+        .prioridad-indicador {
+          display: flex;
+          justify-content: center;
+          gap: 1rem;
+          margin: 1rem 0 2rem;
+          flex-wrap: wrap;
+        }
+
+        .prioridad-badge {
+          padding: 0.3rem 1rem;
+          border-radius: 50px;
+          font-size: 0.8rem;
+          font-weight: 500;
+          letter-spacing: 0.5px;
+        }
+
+        .prioridad-badge.prioridad-alta {
+          background: linear-gradient(135deg, #4ade80, #22d3ee);
+          color: #0a0a1a;
+          box-shadow: 0 0 15px #4ade80;
+        }
+
+        .prioridad-badge.prioridad-media {
+          background: linear-gradient(135deg, #b388ff, #c084fc);
+          color: white;
+          box-shadow: 0 0 15px #b388ff;
+        }
+
+        .prioridad-badge.prioridad-baja {
+          background: linear-gradient(135deg, #3b82f6, #60a5fa);
+          color: white;
+          opacity: 0.9;
+        }
+
+        /* Chips individuales en tarjetas */
+        .prioridad-chip {
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          padding: 0.2rem 0.8rem;
+          border-radius: 50px;
+          font-size: 0.7rem;
+          font-weight: 600;
+          z-index: 10;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+          backdrop-filter: blur(4px);
+        }
+
+        .prioridad-chip.prioridad-alta {
+          background: rgba(74, 222, 128, 0.9);
+          color: #0a0a1a;
+          border: 1px solid #4ade80;
+        }
+
+        .prioridad-chip.prioridad-media {
+          background: rgba(179, 136, 255, 0.9);
+          color: white;
+          border: 1px solid #b388ff;
+        }
+
+        .prioridad-chip.prioridad-baja {
+          background: rgba(59, 130, 246, 0.9);
+          color: white;
+          border: 1px solid #3b82f6;
+        }
+
+        /* Efecto hover según prioridad */
+        .obra-card.prioridad-alta:hover {
+          box-shadow: 0 20px 40px -10px rgba(74, 222, 128, 0.3);
+        }
+
+        .obra-card.prioridad-media:hover {
+          box-shadow: 0 20px 40px -10px rgba(179, 136, 255, 0.3);
+        }
+
+        .obra-card.prioridad-baja:hover {
+          box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.2);
+        }
+
+        .tipo-entrega {
+          font-size: 0.7rem;
+          color: #a78bfa;
+          margin-top: 0.2rem;
+          opacity: 0.8;
+        }
+
+        .no-disponible {
+          color: #c17b5e;
+          font-style: italic;
         }
       `}</style>
     </div>
