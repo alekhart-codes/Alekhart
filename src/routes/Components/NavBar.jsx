@@ -24,6 +24,23 @@ export const NavBar = () => {
     return (
         <>
             <style>{`
+                /* Navbar transparente al inicio, semitransparente al hacer scroll */
+                .navbar {
+                    background: transparent !important;
+                    transition: all 0.3s ease;
+                    position: fixed;
+                    width: 100%;
+                    top: 0;
+                    z-index: 1000;
+                    padding: 1rem 2rem;
+                }
+
+                .navbar.scrolled {
+                    background: rgba(193, 123, 94, 0.85) !important;
+                    backdrop-filter: blur(8px);
+                }
+
+                /* Mantener todos tus estilos originales */
                 .navbar-brand {
                     max-width: 400px;
                     padding: 0;
@@ -42,12 +59,16 @@ export const NavBar = () => {
                 }
 
                 @media (max-width: 991px) {
+                    .navbar {
+                        padding: 0.8rem 1rem;
+                    }
+                    
                     .navbar-brand {
                         max-width: 100%;
                     }
                     
                     .navbar-brand-logo {
-                        max-height: 210px; /* 50% más grande que antes (140px → 210px) */
+                        max-height: 210px;
                     }
 
                     .scrolled .navbar-brand-logo {
@@ -57,7 +78,7 @@ export const NavBar = () => {
 
                 @media (max-width: 576px) {
                     .navbar-brand-logo {
-                        max-height: 190px; /* Ajuste para móviles pequeños */
+                        max-height: 190px;
                     }
 
                     .scrolled .navbar-brand-logo {
@@ -70,11 +91,13 @@ export const NavBar = () => {
                     padding: 0.7rem;
                     margin-left: auto;
                     order: 2;
+                    background: transparent;
                 }
 
                 .navbar-toggler-icon {
                     width: 2.2em;
                     height: 2.2em;
+                    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='white' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
                 }
 
                 .navbar-toggler:focus {
@@ -91,16 +114,17 @@ export const NavBar = () => {
 
                 @media (max-width: 991px) {
                     .navbar-collapse {
-                        background: rgba(0, 0, 0, 0.9);
+                        background: rgba(0, 0, 0, 0.85);
                         padding: 1.5rem;
                         border-radius: 15px;
                         margin-top: 1rem;
-                        backdrop-filter: blur(5px);
+                        backdrop-filter: blur(8px);
                     }
 
                     .nav-link {
                         font-size: 1.4rem;
                         padding: 0.8rem 0;
+                        text-align: center;
                     }
                 }
 
@@ -110,18 +134,26 @@ export const NavBar = () => {
                     font-weight: 400;
                     transition: opacity 0.3s ease;
                     letter-spacing: 0.5px;
+                    position: relative;
                 }
 
                 .nav-link:hover {
                     opacity: 0.8;
                 }
+
+                /* Ajuste para que el contenido no quede detrás del navbar */
+                body {
+                    padding-top: 80px;
+                }
+
+                @media (max-width: 991px) {
+                    body {
+                        padding-top: 70px;
+                    }
+                }
             `}</style>
 
             <nav 
-                style={{ 
-                    color: '#ffffff',
-                    transition: 'all 0.3s ease'
-                }} 
                 className={`navbar navbar-expand-lg navbar-dark ${scrolled ? 'scrolled' : ''}`}
             >
                 <div className="container-fluid">
