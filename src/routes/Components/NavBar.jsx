@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, NavLink } from "react-router-dom";
+import { UsuarioContext } from '../../context/UsuarioContext';
 import '../../style.css';
 
 export const NavBar = () => {
+    const { carrito, setMostrarCarrito } = useContext(UsuarioContext);
     const [scrolled, setScrolled] = useState(false);
 
     const handleScroll = () => {
@@ -21,6 +23,9 @@ export const NavBar = () => {
         };
     }, []);
 
+    // Calcular total de items en carrito
+    const totalItems = carrito?.reduce((sum, item) => sum + (item.cantidad || 1), 0) || 0;
+
     return (
         <>
             <style>{`
@@ -36,161 +41,164 @@ export const NavBar = () => {
                 }
 
                 .navbar.scrolled {
-                    background: rgba(193, 123, 94, 0.85) !important;
-                    backdrop-filter: blur(8px);
+                    background: rgba(253, 248, 243, 0.95) !important;
+                    backdrop-filter: blur(10px);
+                    border-bottom: 1px solid rgba(193, 123, 94, 0.1);
                 }
 
-                /* Estilos específicos para alinear el menú a la izquierda */
+                /* Contenedor flex para logo a izquierda y menú a derecha */
                 .navbar .container-fluid {
                     display: flex;
-                    justify-content: flex-start !important;
+                    justify-content: space-between !important;
                     align-items: center;
-                    gap: 2rem;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 0 2rem;
                 }
 
                 .navbar-brand {
-                    max-width: 400px;
                     padding: 0;
-                    margin-right: 0 !important;
+                    margin: 0 !important;
                 }
 
                 .navbar-brand-logo {
-                    max-height: 140px;
+                    height: 50px;
                     width: auto;
-                    height: auto;
-                    transition: max-height 0.3s ease;
+                    display: block;
+                    object-fit: contain;
+                    transition: all 0.3s ease;
                 }
 
                 .scrolled .navbar-brand-logo {
-                    max-height: 120px;
+                    height: 45px;
                 }
 
-                /* Menú a la izquierda */
+                /* Menú horizontal a la derecha */
                 .navbar-collapse {
                     flex-grow: 0 !important;
+                    display: flex !important;
                 }
 
                 .navbar-nav {
-                    margin-left: 0 !important;
-                    padding-left: 0;
+                    display: flex !important;
+                    flex-direction: row !important;
+                    align-items: center;
+                    gap: 2rem;
+                    margin: 0 !important;
                 }
 
-                @media (max-width: 991px) {
-                    .navbar {
-                        padding: 0.8rem 1rem;
-                    }
-
-                    .navbar .container-fluid {
-                        gap: 1rem;
-                        justify-content: space-between !important;
-                    }
-                    
-                    .navbar-brand {
-                        max-width: 100%;
-                    }
-                    
-                    .navbar-brand-logo {
-                        max-height: 210px;
-                    }
-
-                    .scrolled .navbar-brand-logo {
-                        max-height: 180px;
-                    }
-
-                    .navbar-collapse {
-                        flex-grow: 1 !important;
-                        position: absolute;
-                        top: 100%;
-                        left: 0;
-                        right: 0;
-                        width: 100%;
-                    }
-                }
-
-                @media (max-width: 576px) {
-                    .navbar-brand-logo {
-                        max-height: 190px;
-                    }
-
-                    .scrolled .navbar-brand-logo {
-                        max-height: 160px;
-                    }
-                }
-
-                /* Botón hamburguesa con color terracota cuando NO está abierto */
-                .navbar-toggler {
-                    border: none;
-                    padding: 0.7rem;
-                    margin-left: auto;
-                    order: 2;
-                    background: transparent;
-                }
-
-                .navbar-toggler.collapsed .navbar-toggler-icon {
-                    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23c17b5e' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
-                }
-
-                .navbar-toggler:not(.collapsed) .navbar-toggler-icon {
-                    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='white' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
-                }
-
-                .navbar-toggler:focus {
-                    box-shadow: none;
-                    outline: none;
-                }
-
-                /* Estilos del menú colapsable */
-                .navbar-collapse {
-                    background: transparent;
-                    padding: 0;
-                    margin-top: 0;
-                    order: 3;
-                }
-
-                @media (max-width: 991px) {
-                    .navbar-collapse {
-                        background: rgba(0, 0, 0, 0.85);
-                        padding: 1.5rem;
-                        border-radius: 15px;
-                        margin-top: 1rem;
-                        backdrop-filter: blur(8px);
-                    }
-
-                    .nav-link {
-                        font-size: 1.4rem;
-                        padding: 0.8rem 0;
-                        text-align: center;
-                        color: #ffffff !important;
-                    }
+                .nav-item {
+                    margin: 0 !important;
                 }
 
                 .nav-link {
-                    color: #ffffff !important;
-                    font-size: 1.2rem;
+                    color: #3a2a24 !important;
+                    font-size: 0.9rem;
                     font-weight: 400;
-                    transition: opacity 0.3s ease;
-                    letter-spacing: 0.5px;
-                    position: relative;
+                    letter-spacing: 1px;
+                    text-decoration: none;
+                    padding: 0.5rem 0;
+                    transition: color 0.3s ease;
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                }
+
+                .navbar.scrolled .nav-link {
+                    color: #3a2a24 !important;
                 }
 
                 .nav-link:hover {
-                    opacity: 0.8;
+                    color: #c17b5e !important;
+                }
+
+                /* Botón carrito con estilo especial */
+                .carrito-btn {
+                    background: none;
+                    border: 1px solid #d4b2a0;
+                    border-radius: 2rem;
+                    padding: 0.3rem 1rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.3rem;
+                    color: #3a2a24;
+                    font-size: 0.9rem;
+                    letter-spacing: 1px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    position: relative;
+                }
+
+                .carrito-btn:hover {
+                    background: rgba(193, 123, 94, 0.1);
+                    border-color: #c17b5e;
+                    color: #c17b5e;
+                }
+
+                .carrito-contador {
+                    position: absolute;
+                    top: -6px;
+                    right: -6px;
+                    background: #c17b5e;
+                    color: white;
+                    font-size: 0.7rem;
+                    padding: 2px 6px;
+                    border-radius: 50%;
+                    min-width: 18px;
+                    text-align: center;
+                }
+
+                /* Ocultar el botón hamburguesa completamente */
+                .navbar-toggler {
+                    display: none !important;
+                }
+
+                /* Ajuste responsive */
+                @media (max-width: 768px) {
+                    .navbar .container-fluid {
+                        flex-wrap: wrap;
+                        padding: 0 1rem;
+                    }
+
+                    .navbar-collapse {
+                        width: 100%;
+                        margin-top: 1rem;
+                    }
+
+                    .navbar-nav {
+                        flex-direction: column !important;
+                        width: 100%;
+                        gap: 1rem;
+                        padding: 1rem 0;
+                        border-top: 1px solid rgba(193, 123, 94, 0.2);
+                    }
+
+                    .nav-link, .carrito-btn {
+                        font-size: 1rem;
+                        text-align: center;
+                        width: 100%;
+                        justify-content: center;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .navbar-brand-logo {
+                        height: 40px;
+                    }
+                    
+                    .scrolled .navbar-brand-logo {
+                        height: 35px;
+                    }
                 }
 
                 /* Ajuste para que el contenido no quede detrás del navbar */
                 body {
-                    padding-top: 80px;
-                }
-
-                @media (max-width: 991px) {
-                    body {
-                        padding-top: 70px;
-                    }
+                    padding-top: 70px;
                 }
             `}</style>
 
             <nav 
-                className={`navbar navbar-expand-lg navbar-dark ${scrolled ? 'scrolled' : ''}`}
+                className={`navbar navbar-expand-lg ${scrolled ? 'scrolled' : ''}`}
             >
                 <div className="container-fluid">
                     <Link to="/" className="navbar-brand" onClick={() => window.scrollTo(0, 0)}>
@@ -201,29 +209,30 @@ export const NavBar = () => {
                         />
                     </Link>
 
-                    <button
-                        className="navbar-toggler collapsed"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navbarNav"
-                        aria-controls="navbarNav"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation"
-                    >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    
-                    <div className="collapse navbar-collapse" id="navbarNav">
+                    <div className="navbar-collapse">
                         <ul className="navbar-nav">
-                            <li className="nav-item me-4">
-                                <a href="#faq-section" className="nav-link">
-                                    FAQs
-                                </a>
-                            </li>
-                            <li className="nav-item me-4">
-                                <NavLink to="/contact" className="nav-link">
-                                    Contact
+                            <li className="nav-item">
+                                <NavLink to="/about" className="nav-link">
+                                    Sobre mí
                                 </NavLink>
+                            </li>
+                            <li className="nav-item">
+                                <NavLink to="/contact" className="nav-link">
+                                    Contacto
+                                </NavLink>
+                            </li>
+                            <li className="nav-item">
+                                <button 
+                                    onClick={() => setMostrarCarrito(true)} 
+                                    className="carrito-btn"
+                                >
+                                    🛒 Carrito
+                                    {totalItems > 0 && (
+                                        <span className="carrito-contador">
+                                            {totalItems}
+                                        </span>
+                                    )}
+                                </button>
                             </li>
                         </ul>
                     </div>
