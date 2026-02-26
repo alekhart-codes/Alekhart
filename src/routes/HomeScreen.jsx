@@ -3,11 +3,10 @@ import { UsuarioContext } from "../context/UsuarioContext";
 
 export const HomeScreen = () => {
   const { 
-    usuario, 
-    mostrarCarrito, 
-    setMostrarCarrito, 
     carrito, 
-    setCarrito 
+    setCarrito, 
+    mostrarCarrito, 
+    setMostrarCarrito 
   } = useContext(UsuarioContext);
   
   const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
@@ -781,7 +780,7 @@ export const HomeScreen = () => {
         </div>
       )}
 
-      {/* ESTILOS COMPLETOS DEL HOMESCREEN */}
+      {/* ESTILOS */}
       <style>{`
         * {
           margin: 0;
@@ -1073,8 +1072,7 @@ export const HomeScreen = () => {
           padding-bottom: 5px;
         }
 
-        .badge-vendido,
-        .badge-disponible {
+        .badge-vendido {
           position: absolute;
           top: 10px;
           right: 10px;
@@ -1083,15 +1081,7 @@ export const HomeScreen = () => {
           font-size: 0.8rem;
           font-weight: 500;
           z-index: 2;
-        }
-
-        .badge-vendido {
           background: #c17b5e;
-          color: white;
-        }
-
-        .badge-disponible {
-          background: #4a7c59;
           color: white;
         }
 
