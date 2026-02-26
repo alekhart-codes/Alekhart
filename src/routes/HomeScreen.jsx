@@ -13,6 +13,7 @@ export const HomeScreen = () => {
   const [mostrarCarrito, setMostrarCarrito] = useState(false);
   const [notificacion, setNotificacion] = useState(null);
   const [productosConPrecioVisible, setProductosConPrecioVisible] = useState({});
+  const [menuAbierto, setMenuAbierto] = useState(false);
   const fadeRefs = useRef([]);
 
   // Número de WhatsApp
@@ -390,12 +391,31 @@ export const HomeScreen = () => {
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${mensaje}`, "_blank");
   };
 
+  // ===== FUNCIONES DE NAVEGACIÓN =====
+  const handleNavigation = (seccion) => {
+    setMenuAbierto(false);
+    
+    if (seccion === "obra") {
+      setModoVista("portfolio");
+      setCategoriaSeleccionada("todas");
+      document.getElementById("obra")?.scrollIntoView({ behavior: "smooth" });
+    } else if (seccion === "tienda") {
+      setModoVista("tienda");
+      setCategoriaSeleccionada("todas");
+      document.getElementById("tienda")?.scrollIntoView({ behavior: "smooth" });
+    } else if (seccion === "sobre") {
+      document.getElementById("sobre")?.scrollIntoView({ behavior: "smooth" });
+    } else if (seccion === "contacto") {
+      document.getElementById("contacto")?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="home-container">
-      {/* ===== NAVBAR CON DEGRADADO Y BILINGÜE ===== */}
+      {/* ===== NAVBAR CON DEGRADADO, BILINGÜE Y TOGGLE ===== */}
       <nav className="navbar-espiritual">
         <div className="nav-container">
-          <div className="brand">
+          <div className="brand" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
             <img 
               src="/img/Andrea/Logo elegante de Alekhart.png" 
               alt="AlekhArt" 
@@ -403,29 +423,43 @@ export const HomeScreen = () => {
             />
           </div>
           
-          {/* Enlaces bilingües */}
-          <div className="nav-links-bilingues">
-            <a href="#obra" className="bilingue-item">
+          {/* Botón toggle para móvil */}
+          <button 
+            className={`menu-toggle ${menuAbierto ? 'activo' : ''}`}
+            onClick={() => setMenuAbierto(!menuAbierto)}
+            aria-label="Menú"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          
+          {/* Enlaces bilingües con clase condicional para mostrar/ocultar */}
+          <div className={`nav-links-bilingues ${menuAbierto ? 'abierto' : ''}`}>
+            <button onClick={() => handleNavigation("obra")} className="bilingue-item">
               <span className="lang-es">Obra</span>
               <span className="lang-en">Work</span>
-            </a>
-            <a href="#tienda" className="bilingue-item">
+            </button>
+            <button onClick={() => handleNavigation("tienda")} className="bilingue-item">
               <span className="lang-es">Tienda</span>
               <span className="lang-en">Shop</span>
-            </a>
-            <a href="#sobre" className="bilingue-item">
+            </button>
+            <button onClick={() => handleNavigation("sobre")} className="bilingue-item">
               <span className="lang-es">Sobre mí</span>
               <span className="lang-en">About</span>
-            </a>
-            <a href="#contacto" className="bilingue-item">
+            </button>
+            <button onClick={() => handleNavigation("contacto")} className="bilingue-item">
               <span className="lang-es">Contacto</span>
               <span className="lang-en">Contact</span>
-            </a>
+            </button>
             
             {/* Carrito bilingüe */}
             <button 
               className="carrito-icono bilingue-item"
-              onClick={() => setMostrarCarrito(true)}
+              onClick={() => {
+                setMostrarCarrito(true);
+                setMenuAbierto(false);
+              }}
             >
               <span className="lang-es">🛒 Carrito</span>
               <span className="lang-en">🛒 Cart</span>
@@ -841,7 +875,7 @@ export const HomeScreen = () => {
         </div>
       )}
 
-      {/* ESTILOS CON LOS COLORES SOLICITADOS */}
+      {/* ESTILOS CON NAVBAR TOGGLE Y COLORES */}
       <style>{`
         * {
           margin: 0;
@@ -861,12 +895,12 @@ export const HomeScreen = () => {
           min-height: 100vh;
         }
 
-        /* ===== NAVBAR CON DEGRADADO Y BILINGÜE ===== */
+        /* ===== NAVBAR CON DEGRADADO, BILINGÜE Y TOGGLE ===== */
         .navbar-espiritual {
           position: fixed;
           top: 0;
           width: 100%;
-          background: rgba(10, 5, 20, 0.85);
+          background: rgba(10, 5, 20, 0.9);
           backdrop-filter: blur(12px);
           padding: 0.8rem 2rem;
           z-index: 1000;
@@ -926,6 +960,12 @@ export const HomeScreen = () => {
           display: flex;
           justify-content: space-between;
           align-items: center;
+          position: relative;
+        }
+
+        .brand {
+          cursor: pointer;
+          z-index: 1002;
         }
 
         .brand-logo {
@@ -934,11 +974,46 @@ export const HomeScreen = () => {
           filter: drop-shadow(0 0 8px #b388ff);
         }
 
+        /* Botón toggle */
+        .menu-toggle {
+          display: none;
+          flex-direction: column;
+          justify-content: space-around;
+          width: 30px;
+          height: 25px;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          padding: 0;
+          z-index: 1002;
+        }
+
+        .menu-toggle span {
+          width: 30px;
+          height: 3px;
+          background: linear-gradient(90deg, #b388ff, #4ade80);
+          border-radius: 10px;
+          transition: all 0.3s linear;
+        }
+
+        .menu-toggle.activo span:nth-child(1) {
+          transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.activo span:nth-child(2) {
+          opacity: 0;
+        }
+
+        .menu-toggle.activo span:nth-child(3) {
+          transform: rotate(-45deg) translate(7px, -6px);
+        }
+
         /* Enlaces bilingües */
         .nav-links-bilingues {
           display: flex;
           gap: 2rem;
           align-items: center;
+          transition: all 0.3s ease;
         }
 
         .bilingue-item {
@@ -951,6 +1026,8 @@ export const HomeScreen = () => {
           padding: 0.2rem 0;
           transition: all 0.2s;
           border-bottom: 1px solid transparent;
+          color: inherit;
+          font-family: inherit;
         }
 
         .bilingue-item:hover {
@@ -1009,7 +1086,51 @@ export const HomeScreen = () => {
           margin-top: 70px;
         }
 
-        /* ===== RESTO DE ESTILOS IGUAL QUE ANTES ===== */
+        /* ===== RESPONSIVE TOGGLE ===== */
+        @media (max-width: 768px) {
+          .menu-toggle {
+            display: flex;
+          }
+
+          .nav-links-bilingues {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 70%;
+            max-width: 300px;
+            height: 100vh;
+            background: rgba(10, 5, 20, 0.98);
+            backdrop-filter: blur(12px);
+            flex-direction: column;
+            justify-content: center;
+            gap: 2rem;
+            padding: 2rem;
+            transition: right 0.3s ease;
+            z-index: 1001;
+            border-left: 1px solid rgba(179, 136, 255, 0.3);
+          }
+
+          .nav-links-bilingues.abierto {
+            right: 0;
+          }
+
+          .bilingue-item {
+            width: 100%;
+            text-align: center;
+            align-items: center;
+          }
+
+          .carrito-icono {
+            width: 100%;
+            justify-content: center;
+          }
+
+          .hero {
+            margin-top: 60px;
+          }
+        }
+
+        /* ===== RESTO DE ESTILOS (sin cambios) ===== */
         .hero {
           min-height: 100vh;
           display: flex;
@@ -1995,66 +2116,6 @@ export const HomeScreen = () => {
 
           .modal-compra-grid {
             grid-template-columns: 1fr;
-          }
-        }
-
-        @media (max-width: 768px) {
-          .navbar-espiritual {
-            padding: 0.5rem 1rem;
-          }
-          
-          .nav-links-bilingues {
-            gap: 1rem;
-          }
-          
-          .brand-logo {
-            height: 35px;
-          }
-          
-          .bilingue-item .lang-es {
-            font-size: 0.9rem;
-          }
-          
-          .bilingue-item .lang-en {
-            font-size: 0.65rem;
-          }
-
-          .vista-wrapper {
-            flex-direction: column;
-            align-items: center;
-          }
-
-          .vista-btn {
-            width: 200px;
-            justify-content: center;
-          }
-
-          .obra-card-offset {
-            margin-top: 0;
-          }
-
-          .galeria-grid {
-            gap: 1.5rem;
-          }
-
-          .proceso-grid {
-            gap: 1rem;
-          }
-
-          .testimonio-texto {
-            font-size: 1.2rem;
-          }
-
-          .formato-info {
-            grid-template-columns: 1fr;
-          }
-
-          .carrito-acciones {
-            flex-direction: column;
-          }
-          
-          .hero {
-            margin-top: 60px;
           }
         }
 
