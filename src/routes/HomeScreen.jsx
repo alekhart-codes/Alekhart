@@ -31,6 +31,18 @@ export const HomeScreen = () => {
     localStorage.setItem('carritoAlekhArt', JSON.stringify(carrito));
   }, [carrito]);
 
+  // FORZAR VISIBILIDAD INICIAL
+  useEffect(() => {
+    // Forzar que las obras sean visibles desde el inicio
+    setTimeout(() => {
+      document.querySelectorAll('.obra-card').forEach(el => {
+        el.style.opacity = '1';
+        el.style.visibility = 'visible';
+        el.style.display = 'block';
+      });
+    }, 100);
+  }, []);
+
   // Obras de portafolio
   const obras = [
     {
@@ -200,7 +212,7 @@ export const HomeScreen = () => {
     ? elementosMostrados 
     : elementosMostrados.filter(el => el.categoria === categoriaSeleccionada);
 
-  // Intersection Observer
+  // Intersection Observer (solo para fade-in de secciones, no para obras)
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -352,12 +364,15 @@ export const HomeScreen = () => {
 
   return (
     <div className="home-container">
-      {/* NAVBAR */}
+      {/* NAVBAR CON LOGO DE IMAGEN */}
       <nav className="navbar">
         <div className="nav-container">
           <div className="brand">
-            <span className="brand-icon">✸</span>
-            <span className="brand-text">AlekhArt</span>
+            <img 
+              src="/img/Andrea/Logo elegante de Alekhart.png" 
+              alt="AlekhArt" 
+              className="brand-logo" 
+            />
           </div>
           <div className="nav-links">
             <a href="#obra">Obra</a>
@@ -452,7 +467,7 @@ export const HomeScreen = () => {
       </section>
 
       {/* GALERÍA / TIENDA */}
-      <section id={modoVista === 'portfolio' ? "obra" : "tienda"} className="galeria-section fade" ref={addToRefs}>
+      <section id={modoVista === 'portfolio' ? "obra" : "tienda"} className="galeria-section">
         <div className="container">
           <h2 className="section-titulo text-center">
             {modoVista === 'portfolio' ? 'Obras' : 'Acuarelas disponibles'}
@@ -782,7 +797,7 @@ export const HomeScreen = () => {
         </div>
       )}
 
-      {/* ESTILOS */}
+      {/* ESTILOS - SIN jsx */}
       <style>{`
         * {
           margin: 0;
@@ -802,7 +817,7 @@ export const HomeScreen = () => {
           min-height: 100vh;
         }
 
-        /* NAVBAR */
+        /* NAVBAR CON LOGO */
         .navbar {
           position: fixed;
           top: 0;
@@ -826,21 +841,13 @@ export const HomeScreen = () => {
         .brand {
           display: flex;
           align-items: center;
-          gap: 0.5rem;
         }
 
-        .brand-icon {
-          color: #c17b5e;
-          font-size: 1.8rem;
-          animation: girar 10s linear infinite;
-          display: inline-block;
-        }
-
-        .brand-text {
-          font-size: 1.2rem;
-          font-weight: 400;
-          color: #c17b5e;
-          letter-spacing: 2px;
+        .brand-logo {
+          height: 50px;
+          width: auto;
+          display: block;
+          object-fit: contain;
         }
 
         .nav-links {
@@ -1882,15 +1889,28 @@ export const HomeScreen = () => {
 
         @media (max-width: 768px) {
           .navbar {
-            padding: 0.8rem 0;
+            padding: 0.8rem 1rem;
           }
-
-          .nav-links a:not(:last-child) {
+          
+          .brand-logo {
+            height: 35px;
+          }
+          
+          .nav-links {
+            display: flex;
+            gap: 1rem;
+          }
+          
+          .nav-links a {
             display: none;
           }
-
-          .brand-text {
-            display: none;
+          
+          .nav-links a:last-child {
+            display: flex;
+          }
+          
+          .carrito-icono {
+            display: flex;
           }
 
           .vista-wrapper {
@@ -1943,6 +1963,10 @@ export const HomeScreen = () => {
 
           .galeria-grid {
             grid-template-columns: 1fr;
+          }
+          
+          .brand-logo {
+            height: 30px;
           }
         }
       `}</style>
