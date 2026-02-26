@@ -254,10 +254,12 @@ Quiero comprar:
 
   return (
     <div className="home-container">
-      {/* NAVBAR FIJA */}
+      {/* NAVBAR - Solo logo, sin texto */}
       <nav className="navbar">
         <div className="nav-container">
-          <div className="brand">Andrea Fortoul</div>
+          <div className="brand">
+            <span className="brand-icon">✸</span>
+          </div>
           <div className="nav-links">
             <a href="#obra">Obra</a>
             <a href="#tienda">Tienda</a>
@@ -289,19 +291,12 @@ Quiero comprar:
               <span>Arte original</span>
               <span>Murales en vivo</span>
             </div>
-            <div className="hero-botones">
-              <a href="#obra" className="hero-boton hero-boton-primario">
-                Portfolio
-              </a>
-              <a href="#tienda" className="hero-boton hero-boton-secundario">
-                Tienda
-              </a>
-            </div>
+            {/* Solo un par de botones en hero, no en el selector de vista */}
           </div>
         </div>
       </section>
 
-      {/* SELECTOR DE VISTA */}
+      {/* SELECTOR DE VISTA (Portfolio/Tienda) - Solo una vez */}
       <section className="vista-selector fade" ref={addToRefs}>
         <div className="container">
           <div className="vista-wrapper">
@@ -587,7 +582,7 @@ Quiero comprar:
           min-height: 100vh;
         }
 
-        /* Navbar */
+        /* Navbar - Solo icono */
         .navbar {
           position: fixed;
           top: 0;
@@ -609,9 +604,14 @@ Quiero comprar:
         }
 
         .brand {
-          font-size: 1.3rem;
-          font-weight: 300;
+          font-size: 1.5rem;
+        }
+
+        .brand-icon {
           color: #c17b5e;
+          font-size: 1.8rem;
+          animation: girar 10s linear infinite;
+          display: inline-block;
         }
 
         .nav-links {
@@ -629,6 +629,11 @@ Quiero comprar:
 
         .nav-links a:hover {
           color: #c17b5e;
+        }
+
+        @keyframes girar {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
 
         /* Hero */
@@ -661,11 +666,6 @@ Quiero comprar:
           color: #c17b5e;
           margin-bottom: 1rem;
           animation: girar 20s linear infinite;
-        }
-
-        @keyframes girar {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
         }
 
         .hero-titulo {
@@ -724,46 +724,6 @@ Quiero comprar:
           backdrop-filter: blur(5px);
         }
 
-        .hero-botones {
-          display: flex;
-          justify-content: center;
-          gap: 1rem;
-          flex-wrap: wrap;
-        }
-
-        .hero-boton {
-          display: inline-block;
-          padding: 1rem 2rem;
-          text-decoration: none;
-          border-radius: 50px;
-          font-size: 1rem;
-          letter-spacing: 1px;
-          transition: all 0.3s ease;
-          min-width: 140px;
-        }
-
-        .hero-boton-primario {
-          background: #c17b5e;
-          color: white;
-        }
-
-        .hero-boton-secundario {
-          background: transparent;
-          color: #c17b5e;
-          border: 1px solid #c17b5e;
-        }
-
-        .hero-boton-primario:hover {
-          background: #a5674c;
-          transform: translateY(-3px);
-          box-shadow: 0 10px 25px rgba(193, 123, 94, 0.3);
-        }
-
-        .hero-boton-secundario:hover {
-          background: rgba(193, 123, 94, 0.1);
-          transform: translateY(-3px);
-        }
-
         /* Secciones generales */
         .container {
           max-width: 1200px;
@@ -782,7 +742,7 @@ Quiero comprar:
           text-align: center;
         }
 
-        /* Vista selector */
+        /* Vista selector - Único */
         .vista-selector {
           padding: 2rem 0 0;
         }
@@ -853,7 +813,7 @@ Quiero comprar:
           border-color: #c17b5e;
         }
 
-        /* Galería */
+        /* Galería (mantener el resto de estilos igual) */
         .galeria-section {
           padding: 2rem 0 4rem;
         }
@@ -988,7 +948,7 @@ Quiero comprar:
           box-shadow: 0 5px 15px rgba(193, 123, 94, 0.3);
         }
 
-        /* Sobre */
+        /* Sobre (mantener igual) */
         .sobre-section {
           padding: 5rem 0;
           background: #fdf8f3;
@@ -1418,19 +1378,6 @@ Quiero comprar:
 
           .brand {
             font-size: 1.1rem;
-          }
-
-          .hero {
-            min-height: 90vh;
-          }
-
-          .hero-botones {
-            flex-direction: column;
-            align-items: center;
-          }
-
-          .hero-boton {
-            width: 200px;
           }
 
           .vista-wrapper {
