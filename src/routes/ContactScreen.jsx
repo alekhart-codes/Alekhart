@@ -72,11 +72,11 @@ export const ContactScreen = () => {
   // Referencia al formulario (CRÍTICO para EmailJS)
   const formRef = useRef(null);
   
-  // Estado del formulario - AHORA COINCIDE CON LOS name DE LOS INPUTS
+  // Estado del formulario
   const [formData, setFormData] = useState({
-    name: '',     // antes era 'nombre'
+    name: '',
     email: '',
-    message: ''   // antes era 'mensaje'
+    message: ''
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -95,7 +95,6 @@ export const ContactScreen = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    console.log('Public Key:', import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
 
     try {
       // Obtener credenciales de variables de entorno
@@ -103,7 +102,7 @@ export const ContactScreen = () => {
       const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
       const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-      // Enviar email USANDO LA REFERENCIA AL FORMULARIO
+      // Enviar email
       await emailjs.sendForm(
         serviceId, 
         templateId, 
@@ -112,7 +111,7 @@ export const ContactScreen = () => {
       );
 
       setSubmitStatus('success');
-      setFormData({ name: '', email: '', message: '' }); // LIMPIEZA CORREGIDA
+      setFormData({ name: '', email: '', message: '' });
     } catch (error) {
       console.error('Error:', error);
       setSubmitStatus('error');
@@ -122,18 +121,18 @@ export const ContactScreen = () => {
     }
   };
 
-  // Datos de contacto
+  // Datos de contacto actualizados para Andrea
   const contactMethods = [
     {
       icon: '✉️',
       title: 'Correspondencia',
-      link: 'mailto:victor19.mp@gmail.com',
+      link: 'mailto:andrea@alekhart.cl',
       note: 'respuesta personal'
     },
     {
       icon: '📱',
       title: 'WhatsApp',
-      link: 'https://wa.me/56973156446',
+      link: 'https://wa.me/569XXXXXXXX', // Reemplaza con tu número
       note: 'respuesta rápida'
     }
   ];
@@ -142,7 +141,7 @@ export const ContactScreen = () => {
   const trustSeals = [
     { icon: '⏳', text: 'sin prisas' },
     { icon: '🤝', text: 'trato directo' },
-    { icon: '🔨', text: 'hecho a mano' }
+    { icon: '🎨', text: 'hecho a mano' }
   ];
 
   return (
@@ -161,14 +160,14 @@ export const ContactScreen = () => {
         >
           <ArtisanImage 
             src={artisanImages.artist} 
-            alt="Artista artesano digital" 
+            alt="Andrea Fortoul - Artista" 
             badge="🎨"
             delay={0.1}
           />
           <ArtisanImage 
             src={artisanImages.process} 
             alt="Proceso artesanal" 
-            badge="🛠️"
+            badge="🖌️"
             delay={0.3}
           />
           <ArtisanImage 
@@ -184,7 +183,7 @@ export const ContactScreen = () => {
           className={styles.signature}
           variants={itemVariants}
         >
-          hecho a mano · con propósito
+          mandalas · geometría sagrada · acuarelas
         </motion.div>
 
         {/* SELLO ARTESANAL */}
@@ -192,7 +191,7 @@ export const ContactScreen = () => {
           className={styles.stamp}
           variants={stampVariants}
         >
-          <span className={styles.stampText}>trabajo en curso</span>
+          <span className={styles.stampText}>arte original</span>
         </motion.div>
 
         {/* TÍTULO PRINCIPAL */}
@@ -200,7 +199,7 @@ export const ContactScreen = () => {
           className={styles.title}
           variants={titleVariants}
         >
-          ¡Vamos arriba!
+          Conversemos
           <motion.span 
             className={styles.arrow}
             variants={arrowVariants}
@@ -214,7 +213,7 @@ export const ContactScreen = () => {
           className={styles.subtitle}
           variants={itemVariants}
         >
-          Cada línea de código es como una pincelada.
+          Cada mandala es un viaje al centro.
           <br />
           <span className={styles.highlight}>
             Hagamos algo bello juntos.
@@ -226,7 +225,7 @@ export const ContactScreen = () => {
           className={styles.card}
           variants={itemVariants}
           whileHover={{
-            boxShadow: "0 15px 40px rgba(184,138,75,0.1), 0 0 0 1px #b88a4b, 0 0 0 4px white, 0 0 0 5px #b88a4b",
+            boxShadow: "0 15px 40px rgba(193,123,94,0.1), 0 0 0 1px #c17b5e, 0 0 0 4px white, 0 0 0 5px #c17b5e",
             transition: { duration: 0.3 }
           }}
         >
@@ -237,11 +236,11 @@ export const ContactScreen = () => {
             whileHover={{ 
               rotate: 15,
               scale: 1.1,
-              borderColor: "#b88a4b",
+              borderColor: "#c17b5e",
               transition: { duration: 0.3 }
             }}
           >
-            <span className={styles.sealInner}>A•C</span>
+            <span className={styles.sealInner}>A•F</span>
           </motion.div>
           
           <motion.p 
@@ -250,8 +249,8 @@ export const ContactScreen = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
           >
-            Hola, soy Dorje ·
-            <span className={styles.role}> artesano digital</span>
+            Hola, soy Andrea ·
+            <span className={styles.role}> artista visual</span>
           </motion.p>
 
           {/* CARTA PERSONAL */}
@@ -263,16 +262,17 @@ export const ContactScreen = () => {
           >
             <p>
               <span className={styles.dropCap}>C</span>
-              uéntame qué necesitas. Así como un artesano conoce la madera,
-              yo conozco el código. Trabajo sin prisas, con atención al detalle,
-              entregando piezas únicas que resuelven problemas reales.
+              uéntame qué necesitas. Ya sea un mandala para tu espacio, 
+              una acuarela personalizada o un mural que transforme tu entorno. 
+              Trabajo sin prisas, con atención al detalle, creando piezas únicas 
+              que llevan geometría sagrada a tu vida.
             </p>
           </motion.div>
 
-          {/* FORMULARIO - AHORA CON REF Y NAMES CORRECTOS */}
+          {/* FORMULARIO */}
           <form ref={formRef} onSubmit={handleSubmit} className={styles.form}>
             
-            {/* Campo oculto para Netlify (opcional pero recomendado) */}
+            {/* Campo oculto para Netlify */}
             <input type="hidden" name="form-name" value="contacto-artesanal" />
             
             <motion.div 
@@ -288,7 +288,7 @@ export const ContactScreen = () => {
                 type="text"
                 id="name"
                 name="name"
-                value={formData.name}  // CORREGIDO
+                value={formData.name}
                 onChange={handleChange}
                 className={styles.input}
                 placeholder="ej: María González"
@@ -310,7 +310,7 @@ export const ContactScreen = () => {
                 type="email"
                 id="email"
                 name="email"
-                value={formData.email}  // CORREGIDO
+                value={formData.email}
                 onChange={handleChange}
                 className={styles.input}
                 placeholder="ej: maria@taller.cl"
@@ -326,15 +326,15 @@ export const ContactScreen = () => {
               transition={{ delay: 1.2 }}
             >
               <label htmlFor="message" className={styles.label}>
-                ¿Qué sueñas construir?
+                ¿Qué sueñas crear?
               </label>
               <textarea
                 id="message"
                 name="message"
-                value={formData.message}  // CORREGIDO
+                value={formData.message}
                 onChange={handleChange}
                 className={styles.textarea}
-                placeholder="Escribe aquí tu idea... sin filtros, sin tecnicismos. Solo cuéntame qué necesitas."
+                placeholder="Cuéntame tu idea... ¿Un mandala? ¿Una acuarela? ¿Un mural?"
                 rows="5"
                 required
                 disabled={isSubmitting}
@@ -355,7 +355,7 @@ export const ContactScreen = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <span>
-                  {isSubmitting ? 'Enviando...' : 'Enviar esta carta'}
+                  {isSubmitting ? 'Enviando...' : 'Enviar mensaje'}
                 </span>
                 <motion.span 
                   className={styles.buttonIcon}
@@ -393,7 +393,7 @@ export const ContactScreen = () => {
               <p className={styles.note}>
                 * Respondo personalmente en menos de 24 horas.
                 <br />
-                Sin automatizaciones, sin chatbots.
+                Sin automatizaciones, con atención artesanal.
               </p>
             </motion.div>
           </form>
@@ -440,8 +440,7 @@ export const ContactScreen = () => {
           className={styles.quote}
           variants={itemVariants}
         >
-          “El buen código, como la buena madera,
-          <br />se reconoce por su calidez y durabilidad”
+          “El centro está en todas partes”
         </motion.div>
         
         <motion.div 
@@ -450,13 +449,13 @@ export const ContactScreen = () => {
         >
           <motion.span 
             className={styles.signatureName}
-            whileHover={{ scale: 1.05, color: "#b88a4b" }}
+            whileHover={{ scale: 1.05, color: "#c17b5e" }}
             transition={{ duration: 0.3 }}
           >
-            Alekh Art
+            Andrea Fortoul
           </motion.span>
           <span className={styles.signatureTitle}>
-            artesano digital
+            AlekhArt
           </span>
         </motion.div>
       </div>
