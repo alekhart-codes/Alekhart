@@ -391,7 +391,7 @@ export const HomeScreen = () => {
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${mensaje}`, "_blank");
   };
 
-  // ===== FUNCIONES DE NAVEGACIÓN =====
+  // ===== FUNCIÓN DE NAVEGACIÓN =====
   const handleNavigation = (seccion) => {
     setMenuAbierto(false);
     
@@ -412,8 +412,8 @@ export const HomeScreen = () => {
 
   return (
     <div className="home-container">
-      {/* ===== NAVBAR CON DEGRADADO, BILINGÜE Y TOGGLE ===== */}
-      <nav className="navbar-espiritual">
+      {/* NAVBAR CON TOGGLE Y COLORES DE LA PÁGINA */}
+      <nav className="navbar">
         <div className="nav-container">
           <div className="brand" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
             <img 
@@ -423,7 +423,7 @@ export const HomeScreen = () => {
             />
           </div>
           
-          {/* Botón toggle para móvil */}
+          {/* Botón toggle hamburguesa */}
           <button 
             className={`menu-toggle ${menuAbierto ? 'activo' : ''}`}
             onClick={() => setMenuAbierto(!menuAbierto)}
@@ -434,35 +434,28 @@ export const HomeScreen = () => {
             <span></span>
           </button>
           
-          {/* Enlaces bilingües con clase condicional para mostrar/ocultar */}
-          <div className={`nav-links-bilingues ${menuAbierto ? 'abierto' : ''}`}>
-            <button onClick={() => handleNavigation("obra")} className="bilingue-item">
-              <span className="lang-es">Obra</span>
-              <span className="lang-en">Work</span>
+          {/* Enlaces de navegación */}
+          <div className={`nav-links ${menuAbierto ? 'abierto' : ''}`}>
+            <button onClick={() => handleNavigation("obra")} className="nav-link-btn">
+              Obra
             </button>
-            <button onClick={() => handleNavigation("tienda")} className="bilingue-item">
-              <span className="lang-es">Tienda</span>
-              <span className="lang-en">Shop</span>
+            <button onClick={() => handleNavigation("tienda")} className="nav-link-btn">
+              Tienda
             </button>
-            <button onClick={() => handleNavigation("sobre")} className="bilingue-item">
-              <span className="lang-es">Sobre mí</span>
-              <span className="lang-en">About</span>
+            <button onClick={() => handleNavigation("sobre")} className="nav-link-btn">
+              Sobre mí
             </button>
-            <button onClick={() => handleNavigation("contacto")} className="bilingue-item">
-              <span className="lang-es">Contacto</span>
-              <span className="lang-en">Contact</span>
+            <button onClick={() => handleNavigation("contacto")} className="nav-link-btn">
+              Contacto
             </button>
-            
-            {/* Carrito bilingüe */}
             <button 
-              className="carrito-icono bilingue-item"
+              className="carrito-icono nav-link-btn"
               onClick={() => {
                 setMostrarCarrito(true);
                 setMenuAbierto(false);
               }}
             >
-              <span className="lang-es">🛒 Carrito</span>
-              <span className="lang-en">🛒 Cart</span>
+              🛒 Carrito
               {carrito.length > 0 && (
                 <span className="carrito-contador">
                   {carrito.reduce((sum, item) => sum + item.cantidad, 0)}
@@ -875,7 +868,7 @@ export const HomeScreen = () => {
         </div>
       )}
 
-      {/* ESTILOS CON NAVBAR TOGGLE Y COLORES */}
+      {/* ESTILOS CON TOGGLE Y COLORES DE LA PÁGINA */}
       <style>{`
         * {
           margin: 0;
@@ -895,68 +888,22 @@ export const HomeScreen = () => {
           min-height: 100vh;
         }
 
-        /* ===== NAVBAR CON DEGRADADO, BILINGÜE Y TOGGLE ===== */
-        .navbar-espiritual {
+        /* NAVBAR CON TOGGLE */
+        .navbar {
           position: fixed;
           top: 0;
           width: 100%;
-          background: rgba(10, 5, 20, 0.9);
-          backdrop-filter: blur(12px);
-          padding: 0.8rem 2rem;
+          background: rgba(253, 248, 243, 0.95);
+          backdrop-filter: blur(10px);
+          padding: 1rem 0;
           z-index: 1000;
-          border-bottom: none;
-          
-          /* Línea superior degradada */
-          &::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(to bottom, 
-              #b388ff,  /* violeta/morado */
-              #22d3ee,  /* cyan */
-              #4ade80,  /* verde eléctrico */
-              #3b82f6,  /* azul */
-              transparent
-            );
-            background-size: 100% 400%;
-            background-position: top;
-            pointer-events: none;
-            z-index: 1001;
-          }
-          
-          /* Línea inferior degradada */
-          &::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(to bottom, 
-              #c084fc,  /* morado más intenso */
-              #2dd4bf,  /* verde-cyan */
-              #86efac,  /* verde eléctrico claro */
-              #60a5fa,  /* azul claro */
-              transparent
-            );
-            background-size: 100% 400%;
-            background-position: top;
-            pointer-events: none;
-            z-index: 1001;
-          }
+          border-bottom: 1px solid rgba(193, 123, 94, 0.1);
         }
 
-        /* Ocultar navbar anterior */
-        .navbar {
-          display: none;
-        }
-
-        .navbar-espiritual .nav-container {
+        .nav-container {
           max-width: 1200px;
           margin: 0 auto;
+          padding: 0 2rem;
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -965,13 +912,14 @@ export const HomeScreen = () => {
 
         .brand {
           cursor: pointer;
-          z-index: 1002;
+          z-index: 1001;
         }
 
         .brand-logo {
-          height: 45px;
+          height: 50px;
           width: auto;
-          filter: drop-shadow(0 0 8px #b388ff);
+          display: block;
+          object-fit: contain;
         }
 
         /* Botón toggle */
@@ -985,19 +933,20 @@ export const HomeScreen = () => {
           border: none;
           cursor: pointer;
           padding: 0;
-          z-index: 1002;
+          z-index: 1001;
         }
 
         .menu-toggle span {
           width: 30px;
           height: 3px;
-          background: linear-gradient(90deg, #b388ff, #4ade80);
+          background: #c17b5e;
           border-radius: 10px;
           transition: all 0.3s linear;
         }
 
         .menu-toggle.activo span:nth-child(1) {
           transform: rotate(45deg) translate(5px, 5px);
+          background: #c17b5e;
         }
 
         .menu-toggle.activo span:nth-child(2) {
@@ -1006,131 +955,103 @@ export const HomeScreen = () => {
 
         .menu-toggle.activo span:nth-child(3) {
           transform: rotate(-45deg) translate(7px, -6px);
+          background: #c17b5e;
         }
 
-        /* Enlaces bilingües */
-        .nav-links-bilingues {
+        /* Enlaces de navegación */
+        .nav-links {
           display: flex;
           gap: 2rem;
           align-items: center;
-          transition: all 0.3s ease;
         }
 
-        .bilingue-item {
-          display: flex;
-          flex-direction: column;
-          text-decoration: none;
+        .nav-link-btn {
           background: none;
           border: none;
+          color: #3a2a24;
+          font-size: 0.9rem;
+          letter-spacing: 1px;
           cursor: pointer;
-          padding: 0.2rem 0;
-          transition: all 0.2s;
-          border-bottom: 1px solid transparent;
-          color: inherit;
-          font-family: inherit;
+          padding: 0.5rem 0;
+          font-family: 'Cormorant Garamond', serif;
+          transition: color 0.3s ease;
         }
 
-        .bilingue-item:hover {
-          border-bottom-color: #c084fc;
+        .nav-link-btn:hover {
+          color: #c17b5e;
         }
 
-        .lang-es {
-          font-size: 1rem;
-          font-weight: 500;
-          color: #f0eaff;
-          text-shadow: 0 0 8px #b388ff;
-          line-height: 1.2;
-        }
-
-        .lang-en {
-          font-size: 0.75rem;
-          color: #b0e0ff;
-          text-transform: uppercase;
-          letter-spacing: 2px;
-          opacity: 0.8;
-          text-shadow: 0 0 5px #4ade80;
-        }
-
-        /* Carrito */
         .carrito-icono {
-          background: rgba(120, 80, 200, 0.2);
-          border: 1px solid rgba(179, 136, 255, 0.5);
+          display: flex;
+          align-items: center;
+          gap: 0.3rem;
+          background: none;
+          border: 1px solid #d4b2a0;
           border-radius: 2rem;
-          padding: 0.3rem 1rem !important;
+          padding: 0.3rem 1rem;
           position: relative;
         }
 
-        .carrito-icono .lang-es,
-        .carrito-icono .lang-en {
-          display: block;
-          text-align: left;
+        .carrito-icono:hover {
+          background: rgba(193, 123, 94, 0.1);
+          border-color: #c17b5e;
         }
 
         .carrito-contador {
           position: absolute;
           top: -6px;
           right: -6px;
-          background: #4ade80;
-          color: #0a0a1a;
+          background: #c17b5e;
+          color: white;
           font-size: 0.7rem;
-          font-weight: bold;
           padding: 2px 6px;
-          border-radius: 40%;
-          min-width: 20px;
+          border-radius: 50%;
+          min-width: 18px;
           text-align: center;
-          box-shadow: 0 0 10px #22d3ee;
         }
 
-        /* Ajuste hero */
-        .hero {
-          margin-top: 70px;
-        }
-
-        /* ===== RESPONSIVE TOGGLE ===== */
+        /* Responsive toggle */
         @media (max-width: 768px) {
           .menu-toggle {
             display: flex;
           }
 
-          .nav-links-bilingues {
+          .nav-links {
             position: fixed;
             top: 0;
             right: -100%;
             width: 70%;
             max-width: 300px;
             height: 100vh;
-            background: rgba(10, 5, 20, 0.98);
-            backdrop-filter: blur(12px);
+            background: rgba(253, 248, 243, 0.98);
+            backdrop-filter: blur(10px);
             flex-direction: column;
             justify-content: center;
             gap: 2rem;
             padding: 2rem;
             transition: right 0.3s ease;
-            z-index: 1001;
-            border-left: 1px solid rgba(179, 136, 255, 0.3);
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            border-left: 1px solid rgba(193, 123, 94, 0.2);
           }
 
-          .nav-links-bilingues.abierto {
+          .nav-links.abierto {
             right: 0;
           }
 
-          .bilingue-item {
+          .nav-link-btn {
+            font-size: 1.1rem;
             width: 100%;
             text-align: center;
-            align-items: center;
+            padding: 0.8rem;
           }
 
           .carrito-icono {
-            width: 100%;
             justify-content: center;
-          }
-
-          .hero {
-            margin-top: 60px;
+            width: 100%;
           }
         }
 
-        /* ===== RESTO DE ESTILOS (sin cambios) ===== */
+        /* HERO */
         .hero {
           min-height: 100vh;
           display: flex;
@@ -1401,7 +1322,8 @@ export const HomeScreen = () => {
           padding-bottom: 5px;
         }
 
-        .badge-vendido {
+        .badge-vendido,
+        .badge-disponible {
           position: absolute;
           top: 10px;
           right: 10px;
@@ -1410,7 +1332,15 @@ export const HomeScreen = () => {
           font-size: 0.8rem;
           font-weight: 500;
           z-index: 2;
+        }
+
+        .badge-vendido {
           background: #c17b5e;
+          color: white;
+        }
+
+        .badge-disponible {
+          background: #4a7c59;
           color: white;
         }
 
