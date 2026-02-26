@@ -4,7 +4,7 @@ import { UsuarioContext } from '../../context/UsuarioContext';
 import '../../style.css';
 
 export const NavBar = () => {
-    const { setMostrarCarrito } = useContext(UsuarioContext);
+    const { setMostrarCarrito, totalItems } = useContext(UsuarioContext);
     const [scrolled, setScrolled] = useState(false);
     const [menuAbierto, setMenuAbierto] = useState(false);
     const navigate = useNavigate();
@@ -100,7 +100,6 @@ export const NavBar = () => {
 
                 .menu-toggle.activo span:nth-child(1) {
                     transform: rotate(45deg) translate(8px, 8px);
-                    background: #c17b5e;
                 }
 
                 .menu-toggle.activo span:nth-child(2) {
@@ -109,7 +108,6 @@ export const NavBar = () => {
 
                 .menu-toggle.activo span:nth-child(3) {
                     transform: rotate(-45deg) translate(8px, -8px);
-                    background: #c17b5e;
                 }
 
                 .menu-desplegable {
@@ -159,6 +157,15 @@ export const NavBar = () => {
                     border-radius: 2rem;
                     padding: 0.8rem 1.5rem;
                     margin-top: 1rem;
+                }
+
+                .menu-contador {
+                    background: #c17b5e;
+                    color: white;
+                    padding: 0.2rem 0.6rem;
+                    border-radius: 50%;
+                    font-size: 0.8rem;
+                    margin-left: 0.5rem;
                 }
 
                 .menu-overlay {
@@ -248,6 +255,9 @@ export const NavBar = () => {
                 </button>
                 <button onClick={handleAbrirCarrito} className="menu-item carrito">
                     <span>🛒 Carrito</span>
+                    {totalItems > 0 && (
+                        <span className="menu-contador">{totalItems}</span>
+                    )}
                 </button>
             </div>
 
