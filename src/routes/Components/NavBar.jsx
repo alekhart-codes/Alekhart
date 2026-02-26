@@ -4,7 +4,7 @@ import { UsuarioContext } from '../../context/UsuarioContext';
 import '../../style.css';
 
 export const NavBar = () => {
-    const { carrito, setMostrarCarrito } = useContext(UsuarioContext);
+    const { setMostrarCarrito } = useContext(UsuarioContext);
     const [scrolled, setScrolled] = useState(false);
     const [menuAbierto, setMenuAbierto] = useState(false);
     const navigate = useNavigate();
@@ -25,25 +25,19 @@ export const NavBar = () => {
         };
     }, []);
 
-    // Cerrar menú al hacer click en un enlace
     const handleNavigation = (path) => {
         setMenuAbierto(false);
         navigate(path);
     };
 
-    // Abrir carrito y cerrar menú
     const handleAbrirCarrito = () => {
         setMenuAbierto(false);
         setMostrarCarrito(true);
     };
 
-    // Calcular total de items en carrito
-    const totalItems = carrito?.reduce((sum, item) => sum + (item.cantidad || 1), 0) || 0;
-
     return (
         <>
             <style>{`
-                /* Navbar transparente al inicio, semitransparente al hacer scroll */
                 .navbar-personalizado {
                     position: fixed;
                     top: 0;
@@ -83,7 +77,6 @@ export const NavBar = () => {
                     height: 45px;
                 }
 
-                /* Botón hamburguesa */
                 .menu-toggle {
                     display: flex;
                     flex-direction: column;
@@ -119,7 +112,6 @@ export const NavBar = () => {
                     background: #c17b5e;
                 }
 
-                /* Menú desplegable desde la IZQUIERDA */
                 .menu-desplegable {
                     position: fixed;
                     top: 0;
@@ -169,16 +161,6 @@ export const NavBar = () => {
                     margin-top: 1rem;
                 }
 
-                .menu-contador {
-                    background: #c17b5e;
-                    color: white;
-                    padding: 0.2rem 0.6rem;
-                    border-radius: 50%;
-                    font-size: 0.8rem;
-                    margin-left: 0.5rem;
-                }
-
-                /* Overlay para cerrar menú al hacer click fuera */
                 .menu-overlay {
                     position: fixed;
                     top: 0;
@@ -211,7 +193,6 @@ export const NavBar = () => {
                     }
                 }
 
-                /* Ajuste responsive */
                 @media (max-width: 768px) {
                     .navbar-personalizado {
                         padding: 0.8rem 1rem;
@@ -232,7 +213,6 @@ export const NavBar = () => {
                     }
                 }
 
-                /* Ajuste para que el contenido no quede detrás del navbar */
                 body {
                     padding-top: 70px;
                 }
@@ -247,7 +227,6 @@ export const NavBar = () => {
                         />
                     </Link>
 
-                    {/* Botón hamburguesa - visible solo en móvil */}
                     <button 
                         className={`menu-toggle ${menuAbierto ? 'activo' : ''}`}
                         onClick={() => setMenuAbierto(!menuAbierto)}
@@ -260,7 +239,6 @@ export const NavBar = () => {
                 </div>
             </nav>
 
-            {/* Menú desplegable desde la izquierda */}
             <div className={`menu-desplegable ${menuAbierto ? 'abierto' : ''}`}>
                 <button onClick={() => handleNavigation('/about')} className="menu-item">
                     Sobre mí
@@ -270,13 +248,9 @@ export const NavBar = () => {
                 </button>
                 <button onClick={handleAbrirCarrito} className="menu-item carrito">
                     <span>🛒 Carrito</span>
-                    {totalItems > 0 && (
-                        <span className="menu-contador">{totalItems}</span>
-                    )}
                 </button>
             </div>
 
-            {/* Overlay para cerrar menú */}
             <div 
                 className={`menu-overlay ${menuAbierto ? 'visible' : ''}`}
                 onClick={() => setMenuAbierto(false)}
