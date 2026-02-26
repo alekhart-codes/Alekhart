@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, NavLink } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UsuarioContext } from '../../context/UsuarioContext';
 import '../../style.css';
 
 export const NavBar = () => {
     const { carrito, setMostrarCarrito } = useContext(UsuarioContext);
     const [scrolled, setScrolled] = useState(false);
+    const [menuAbierto, setMenuAbierto] = useState(false);
+    const navigate = useNavigate();
 
     const handleScroll = () => {
         const offset = window.scrollY;
@@ -23,6 +25,18 @@ export const NavBar = () => {
         };
     }, []);
 
+    // Cerrar menú al hacer click en un enlace
+    const handleNavigation = (path) => {
+        setMenuAbierto(false);
+        navigate(path);
+    };
+
+    // Abrir carrito y cerrar menú
+    const handleAbrirCarrito = () => {
+        setMenuAbierto(false);
+        setMostrarCarrito(true);
+    };
+
     // Calcular total de items en carrito
     const totalItems = carrito?.reduce((sum, item) => sum + (item.cantidad || 1), 0) || 0;
 
@@ -30,164 +44,191 @@ export const NavBar = () => {
         <>
             <style>{`
                 /* Navbar transparente al inicio, semitransparente al hacer scroll */
-                .navbar {
-                    background: transparent !important;
-                    transition: all 0.3s ease;
+                .navbar-personalizado {
                     position: fixed;
-                    width: 100%;
                     top: 0;
+                    width: 100%;
+                    background: transparent;
+                    transition: all 0.3s ease;
                     z-index: 1000;
                     padding: 1rem 2rem;
                 }
 
-                .navbar.scrolled {
-                    background: rgba(253, 248, 243, 0.95) !important;
+                .navbar-personalizado.scrolled {
+                    background: rgba(253, 248, 243, 0.95);
                     backdrop-filter: blur(10px);
                     border-bottom: 1px solid rgba(193, 123, 94, 0.1);
                 }
 
-                /* Contenedor flex para logo a izquierda y menú a derecha */
-                .navbar .container-fluid {
-                    display: flex;
-                    justify-content: space-between !important;
-                    align-items: center;
+                .navbar-container {
                     max-width: 1200px;
                     margin: 0 auto;
-                    padding: 0 2rem;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
                 }
 
-                .navbar-brand {
-                    padding: 0;
-                    margin: 0 !important;
+                .navbar-logo {
+                    cursor: pointer;
+                    z-index: 1002;
                 }
 
-                .navbar-brand-logo {
+                .navbar-logo img {
                     height: 50px;
                     width: auto;
-                    display: block;
-                    object-fit: contain;
                     transition: all 0.3s ease;
                 }
 
-                .scrolled .navbar-brand-logo {
+                .scrolled .navbar-logo img {
                     height: 45px;
                 }
 
-                /* Menú horizontal a la derecha */
-                .navbar-collapse {
-                    flex-grow: 0 !important;
-                    display: flex !important;
+                /* Botón hamburguesa */
+                .menu-toggle {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-around;
+                    width: 35px;
+                    height: 30px;
+                    background: transparent;
+                    border: none;
+                    cursor: pointer;
+                    padding: 0;
+                    z-index: 1002;
                 }
 
-                .navbar-nav {
-                    display: flex !important;
-                    flex-direction: row !important;
-                    align-items: center;
-                    gap: 2rem;
-                    margin: 0 !important;
+                .menu-toggle span {
+                    width: 35px;
+                    height: 3px;
+                    background: #c17b5e;
+                    border-radius: 10px;
+                    transition: all 0.3s ease;
                 }
 
-                .nav-item {
-                    margin: 0 !important;
+                .menu-toggle.activo span:nth-child(1) {
+                    transform: rotate(45deg) translate(8px, 8px);
+                    background: #c17b5e;
                 }
 
-                .nav-link {
-                    color: #3a2a24 !important;
-                    font-size: 0.9rem;
-                    font-weight: 400;
-                    letter-spacing: 1px;
+                .menu-toggle.activo span:nth-child(2) {
+                    opacity: 0;
+                }
+
+                .menu-toggle.activo span:nth-child(3) {
+                    transform: rotate(-45deg) translate(8px, -8px);
+                    background: #c17b5e;
+                }
+
+                /* Menú desplegable desde la IZQUIERDA */
+                .menu-desplegable {
+                    position: fixed;
+                    top: 0;
+                    left: -350px;
+                    width: 300px;
+                    height: 100vh;
+                    background: rgba(253, 248, 243, 0.98);
+                    backdrop-filter: blur(10px);
+                    box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+                    transition: left 0.3s ease;
+                    z-index: 1001;
+                    padding: 100px 2rem 2rem;
+                    border-right: 1px solid rgba(193, 123, 94, 0.2);
+                }
+
+                .menu-desplegable.abierto {
+                    left: 0;
+                }
+
+                .menu-item {
+                    display: block;
+                    width: 100%;
+                    padding: 1rem 0;
+                    color: #3a2a24;
                     text-decoration: none;
-                    padding: 0.5rem 0;
+                    font-size: 1.2rem;
+                    letter-spacing: 1px;
                     transition: color 0.3s ease;
                     background: none;
                     border: none;
+                    text-align: left;
                     cursor: pointer;
+                    border-bottom: 1px solid rgba(193, 123, 94, 0.1);
                 }
 
-                .navbar.scrolled .nav-link {
-                    color: #3a2a24 !important;
-                }
-
-                .nav-link:hover {
-                    color: #c17b5e !important;
-                }
-
-                /* Botón carrito con estilo especial */
-                .carrito-btn {
-                    background: none;
-                    border: 1px solid #d4b2a0;
-                    border-radius: 2rem;
-                    padding: 0.3rem 1rem;
-                    display: flex;
-                    align-items: center;
-                    gap: 0.3rem;
-                    color: #3a2a24;
-                    font-size: 0.9rem;
-                    letter-spacing: 1px;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    position: relative;
-                }
-
-                .carrito-btn:hover {
-                    background: rgba(193, 123, 94, 0.1);
-                    border-color: #c17b5e;
+                .menu-item:hover {
                     color: #c17b5e;
                 }
 
-                .carrito-contador {
-                    position: absolute;
-                    top: -6px;
-                    right: -6px;
-                    background: #c17b5e;
-                    color: white;
-                    font-size: 0.7rem;
-                    padding: 2px 6px;
-                    border-radius: 50%;
-                    min-width: 18px;
-                    text-align: center;
+                .menu-item.carrito {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    border: 1px solid #c17b5e;
+                    border-radius: 2rem;
+                    padding: 0.8rem 1.5rem;
+                    margin-top: 1rem;
                 }
 
-                /* Ocultar el botón hamburguesa completamente */
-                .navbar-toggler {
-                    display: none !important;
+                .menu-contador {
+                    background: #c17b5e;
+                    color: white;
+                    padding: 0.2rem 0.6rem;
+                    border-radius: 50%;
+                    font-size: 0.8rem;
+                    margin-left: 0.5rem;
+                }
+
+                /* Overlay para cerrar menú al hacer click fuera */
+                .menu-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.3);
+                    z-index: 1000;
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: all 0.3s ease;
+                }
+
+                .menu-overlay.visible {
+                    opacity: 1;
+                    visibility: visible;
+                }
+
+                @media (min-width: 769px) {
+                    .menu-toggle {
+                        display: none;
+                    }
+                    
+                    .menu-desplegable {
+                        display: none;
+                    }
+                    
+                    .menu-overlay {
+                        display: none;
+                    }
                 }
 
                 /* Ajuste responsive */
                 @media (max-width: 768px) {
-                    .navbar .container-fluid {
-                        flex-wrap: wrap;
-                        padding: 0 1rem;
+                    .navbar-personalizado {
+                        padding: 0.8rem 1rem;
                     }
-
-                    .navbar-collapse {
-                        width: 100%;
-                        margin-top: 1rem;
+                    
+                    .navbar-logo img {
+                        height: 40px;
                     }
-
-                    .navbar-nav {
-                        flex-direction: column !important;
-                        width: 100%;
-                        gap: 1rem;
-                        padding: 1rem 0;
-                        border-top: 1px solid rgba(193, 123, 94, 0.2);
-                    }
-
-                    .nav-link, .carrito-btn {
-                        font-size: 1rem;
-                        text-align: center;
-                        width: 100%;
-                        justify-content: center;
+                    
+                    .scrolled .navbar-logo img {
+                        height: 35px;
                     }
                 }
 
                 @media (max-width: 480px) {
-                    .navbar-brand-logo {
-                        height: 40px;
-                    }
-                    
-                    .scrolled .navbar-brand-logo {
-                        height: 35px;
+                    .menu-desplegable {
+                        width: 250px;
                     }
                 }
 
@@ -197,47 +238,49 @@ export const NavBar = () => {
                 }
             `}</style>
 
-            <nav 
-                className={`navbar navbar-expand-lg ${scrolled ? 'scrolled' : ''}`}
-            >
-                <div className="container-fluid">
-                    <Link to="/" className="navbar-brand" onClick={() => window.scrollTo(0, 0)}>
+            <nav className={`navbar-personalizado ${scrolled ? 'scrolled' : ''}`}>
+                <div className="navbar-container">
+                    <Link to="/" className="navbar-logo" onClick={() => window.scrollTo(0, 0)}>
                         <img 
                             src="/img/Andrea/Logo elegante de Alekhart.png" 
-                            className="navbar-brand-logo" 
                             alt="Alekhart Logo"
                         />
                     </Link>
 
-                    <div className="navbar-collapse">
-                        <ul className="navbar-nav">
-                            <li className="nav-item">
-                                <NavLink to="/about" className="nav-link">
-                                    Sobre mí
-                                </NavLink>
-                            </li>
-                            <li className="nav-item">
-                                <NavLink to="/contact" className="nav-link">
-                                    Contacto
-                                </NavLink>
-                            </li>
-                            <li className="nav-item">
-                                <button 
-                                    onClick={() => setMostrarCarrito(true)} 
-                                    className="carrito-btn"
-                                >
-                                    🛒 Carrito
-                                    {totalItems > 0 && (
-                                        <span className="carrito-contador">
-                                            {totalItems}
-                                        </span>
-                                    )}
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
+                    {/* Botón hamburguesa - visible solo en móvil */}
+                    <button 
+                        className={`menu-toggle ${menuAbierto ? 'activo' : ''}`}
+                        onClick={() => setMenuAbierto(!menuAbierto)}
+                        aria-label="Menú"
+                    >
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
                 </div>
             </nav>
+
+            {/* Menú desplegable desde la izquierda */}
+            <div className={`menu-desplegable ${menuAbierto ? 'abierto' : ''}`}>
+                <button onClick={() => handleNavigation('/about')} className="menu-item">
+                    Sobre mí
+                </button>
+                <button onClick={() => handleNavigation('/contact')} className="menu-item">
+                    Contacto
+                </button>
+                <button onClick={handleAbrirCarrito} className="menu-item carrito">
+                    <span>🛒 Carrito</span>
+                    {totalItems > 0 && (
+                        <span className="menu-contador">{totalItems}</span>
+                    )}
+                </button>
+            </div>
+
+            {/* Overlay para cerrar menú */}
+            <div 
+                className={`menu-overlay ${menuAbierto ? 'visible' : ''}`}
+                onClick={() => setMenuAbierto(false)}
+            ></div>
         </>
     );
 };
