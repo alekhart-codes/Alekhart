@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { UsuarioContext } from '../../context/UsuarioContext';
-import '../../style.css';
 
 export const NavBar = () => {
     const { setMostrarCarrito, totalItems } = useContext(UsuarioContext);
