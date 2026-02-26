@@ -783,7 +783,7 @@ export const HomeScreen = () => {
       )}
 
       {/* ESTILOS */}
-      <style jsx>{`
+      <style>{`
         * {
           margin: 0;
           padding: 0;
