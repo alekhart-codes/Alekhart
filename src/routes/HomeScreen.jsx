@@ -16,7 +16,7 @@ export const HomeScreen = () => {
   const fadeRefs = useRef([]);
 
   // Número de WhatsApp
-  const WHATSAPP_NUMBER = "569XXXXXXXX";
+  const WHATSAPP_NUMBER = "56964327342";
 
   // Cargar carrito desde localStorage
   useEffect(() => {
